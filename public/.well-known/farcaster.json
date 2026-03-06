@@ -1,0 +1,19 @@
+{
+  "accountAssociation": {
+    "header": "SIGN_AT_farcaster.xyz/~/developers/mini-apps/manifest",
+    "payload": "SIGN_AT_farcaster.xyz/~/developers/mini-apps/manifest",
+    "signature": "SIGN_AT_farcaster.xyz/~/developers/mini-apps/manifest"
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "mrxlolcat-agent",
+    "description": "AI agent with token swap, launchpad, social feed, and DeFi lending — built on Farcaster.",
+    "iconUrl": "https://mrxlolcat-agent.vercel.app/icon.png",
+    "homeUrl": "https://mrxlolcat-agent.vercel.app",
+    "imageUrl": "https://mrxlolcat-agent.vercel.app/og.png",
+    "buttonTitle": "Launch mrxlolcat-agent",
+    "splashImageUrl": "https://mrxlolcat-agent.vercel.app/splash.png",
+    "splashBackgroundColor": "#13111C",
+    "webhookUrl": "https://mrxlolcat-agent.vercel.app/api/webhook"
+  }
+}
