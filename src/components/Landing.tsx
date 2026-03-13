@@ -85,13 +85,30 @@ export default function Landing({ onNavigate }: LandingProps) {
 
       <main className="flex-1">
         {/* 2. Hero */}
-        <section className="px-6 pt-20 md:pt-32 pb-16 text-center flex flex-col items-center">
-          <h1 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter uppercase leading-[0.85] shimmer">
-            MRX LOLCAT
-          </h1>
-          <p className="text-xs md:text-sm text-zinc-500 font-bold uppercase tracking-[0.4em] mb-12">
-            The Autonomous On-Chain Operating System.
-          </p>
+        <section className="relative px-6 pt-16 md:pt-24 pb-16 overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full pointer-events-none opacity-20">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-warden-accent/20 blur-[120px] rounded-full" />
+          </div>
+
+          <div className="max-w-7xl mx-auto text-center flex flex-col items-center relative z-10">
+            <div className="relative mb-10 inline-block group">
+              <div className="absolute inset-0 bg-warden-accent/20 blur-3xl rounded-full scale-150" />
+              <img 
+                src="/logo.jpg" 
+                alt="MRX LOLCAT" 
+                className="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl border border-warden-accent/30 object-cover bg-black/50 backdrop-blur-xl transition-transform group-hover:scale-105 duration-500"
+              />
+              <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl bg-warden-accent flex items-center justify-center border-4 border-black text-black font-black animate-fade-in shadow-[0_0_20px_rgba(0,240,255,0.4)]">
+                ✓
+              </div>
+            </div>
+            
+            <h1 className="text-4xl md:text-7xl font-black mb-6 tracking-tighter uppercase leading-[0.85] shimmer px-4">
+              MRX LOLCAT
+            </h1>
+            <p className="text-[10px] md:text-sm text-zinc-500 font-bold uppercase tracking-[0.4em] mb-12 max-w-[280px] md:max-w-none">
+              The Autonomous On-Chain Operating System.
+            </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm md:max-w-lg px-4">
             <button 
@@ -108,7 +125,8 @@ export default function Landing({ onNavigate }: LandingProps) {
               View Docs
             </a>
           </div>
-        </section>
+        </div>
+      </section>
 
         {/* 3. Core Actions */}
         <section className="px-6 pb-24 max-w-7xl mx-auto w-full">

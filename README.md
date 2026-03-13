@@ -10,7 +10,14 @@ The high-tech AI automation terminal for the Farcaster Agentic Economy.
 - **Omnichain Bridge**: Powered by LI.FI (60+ chains).
 - **Long-Term Memory**: FID-based vector storage via Pinecone.
 - **Multi-LLM Reasoning**: GPT-4o, Claude 3.5, and Gemini support via OpenRouter.
+- **Agent Skills**: Built with [Agent Skills Specification](https://agentskills.io/specification).
 - **Interactive Frames**: Native Farcaster Mini App experience.
+
+## 🧠 Agent Skills
+This agent supports modular skills located in `src/agent/skills/`.
+- `bridge-skill`: Cross-chain transfers.
+- `monitor-skill`: Real-time monitoring.
+- `social-skill`: Farcaster interactions.
 
 ## ⚠️ Security Warning
 **NEVER share or store your private keys in plain text.** 
