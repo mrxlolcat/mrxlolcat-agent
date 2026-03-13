@@ -1,23 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { catBridge } from '../../../../integrations/lifi/sdk';
+import { getRoutes } from '@lifi/sdk';
+import '../../../../integrations/lifi/config';
+import { CHAINS, TOKENS } from '../../../../integrations/lifi/constants';
 
 export async function GET(req: NextRequest) {
   try {
-    // Tes simulasi default: Bridge 10 USDC dari Base ke OP
-    const route = await catBridge({
-      fid: 'test-user-123',
-      amount: '10000000', // 10 USDC
+    const routesResponse = await getRoutes({
+      fromChainId: CHAINS.BASE,
+      toChainId: CHAINS.OPTIMISM,
+      fromTokenAddress: TOKENS.USDC_BASE,
+      toTokenAddress: TOKENS.USDC_OP,
+      fromAmount: '1000000', // 1 USDC
     });
     
+    const routes = routesResponse.routes || [];
+    const bestRoute = routes[0];
+    
+    // Calculate bestRoute amount received (assuming 1 USDC in, looking at what we get out)
+    const receiveAmount = bestRoute 
+      ? (Number(bestRoute.toAmount) / 10**6).toFixed(3)
+      : "0";
+
     return NextResponse.json({
       success: true,
-      message: "Test LI.FI: 10 USDC Base → OP simulated successfully",
-      routeInfo: {
-        fromChainId: route.fromChainId,
-        toChainId: route.toChainId,
-        estimatedExecutionTime: route.steps[0]?.estimate?.executionDuration || 'Unknown',
-        feeRecipient: route.steps[0]?.estimate?.feeCosts?.[0]?.amount || 'Check global config'
-      }
+      routes: routes.length,
+      bestRoute: receiveAmount,
+      message: `Simulated 1 USDC Base -> OP. Found ${routes.length} routes.`,
     });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
