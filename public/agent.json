@@ -13,17 +13,14 @@
   "services": [
     {
       "type": "mcp",
+      "url": "https://mrxlolcat-agent.vercel.app/api/mcp",
       "mcpTools": [
         {
-          "name": "bridge-skill",
+          "name": "bridge_assets",
           "description": "Execute cross-chain asset transfers using LI.FI protocol."
         },
         {
-          "name": "monitor-skill",
-          "description": "Real-time on-chain monitoring and wallet tracking."
-        },
-        {
-          "name": "social-skill",
+          "name": "publish_cast",
           "description": "Manage Farcaster social interactions and casting."
         }
       ]
