@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import RevenueDashboard from "./revenue";
 
 export default function Dashboard() {
   const [metrics] = useState({
@@ -22,6 +23,8 @@ export default function Dashboard() {
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Live
         </div>
       </header>
+
+      <RevenueDashboard />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="card p-5 bg-zinc-900/50 border border-zinc-800 rounded-2xl">

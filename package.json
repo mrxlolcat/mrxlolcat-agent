@@ -13,6 +13,8 @@
     "@ai-sdk/google": "^1.0.0",
     "@ai-sdk/openai": "^1.0.0",
     "@farcaster/miniapp-sdk": "^0.2.3",
+    "@lifi/sdk": "^3.16.1",
+    "@lifi/widget": "^3.40.12",
     "@neynar/nodejs-sdk": "^3.137.0",
     "@pinecone-database/pinecone": "^7.1.0",
     "@reown/appkit": "^1.6.0",
