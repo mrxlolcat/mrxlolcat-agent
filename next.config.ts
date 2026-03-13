@@ -2,6 +2,26 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  async headers() {
+    return [
+      {
+        source: "/agent.json",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type" },
+        ],
+      },
+      {
+        source: "/.well-known/agent-card.json",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
