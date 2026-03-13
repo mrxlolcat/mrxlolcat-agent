@@ -1,1 +1,7 @@
-{\n  "name": "MrxLolcat Agent",\n  "version": "3.0.0",\n  "accountAssociation": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",\n  "wallets": ["base", "op-mainnet"],\n  "features": ["frames", "miniapps", "tipjar"]\n}
+{
+  "name": "MRX LOLCAT Agent",
+  "version": "3.0.0",
+  "accountAssociation": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  "wallets": ["base", "op-mainnet"],
+  "features": ["frames", "miniapps", "tipjar"]
+}
