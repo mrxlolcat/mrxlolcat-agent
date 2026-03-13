@@ -20,9 +20,11 @@ export default function Swap({ onBack }: SwapProps) {
         <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
           <div className="relative mb-8">
             <div className="absolute inset-0 bg-warden-accent/20 blur-3xl rounded-full" />
-            <div className="relative w-24 h-24 rounded-full border border-warden-accent/30 flex items-center justify-center text-5xl bg-black/50 backdrop-blur-xl">
-              🤠
-            </div>
+            <img 
+              src="/logo.jpg" 
+              alt="MRX LOLCAT" 
+              className="relative w-24 h-24 rounded-full border border-warden-accent/30 object-cover bg-black/50 backdrop-blur-xl"
+            />
           </div>
           <h2 className="font-black text-xl mb-3 tracking-tighter uppercase">Initialize Key</h2>
           <p className="text-[11px] text-zinc-500 mb-8 max-w-[240px] font-medium leading-relaxed uppercase tracking-wider">Authentication required to access omnichain liquidity modules.</p>

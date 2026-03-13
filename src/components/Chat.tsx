@@ -178,11 +178,11 @@ export default function Chat({ context, onBack }: ChatProps) {
         {onBack && (
           <button onClick={onBack} className="text-zinc-500 hover:text-white transition text-sm">←</button>
         )}
-        <div className="w-9 h-9 rounded-full flex items-center justify-center text-lg border border-warden-accent/30 bg-black">
-          🤠
+        <div className="w-9 h-9 rounded-full flex items-center justify-center border border-warden-accent/30 bg-black overflow-hidden">
+          <img src="/logo.jpg" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="font-bold text-[11px] uppercase tracking-widest text-white">Agent<span className="text-warden-accent">Core</span></h1>
+          <h1 className="font-bold text-[11px] uppercase tracking-widest text-white">MRX<span className="text-warden-accent">LOLCAT</span></h1>
           <p className="text-[9px] font-mono text-zinc-500 uppercase">
             {loading ? "processing…" : streaming ? "streaming…" : `active · v3.0`}
           </p>
@@ -211,7 +211,9 @@ export default function Chat({ context, onBack }: ChatProps) {
           >
             {msg.role === "assistant" && (
               <div className="flex flex-col items-center gap-2 shrink-0 mt-1">
-                <div className="w-6 h-6 rounded-full border border-warden-accent/20 flex items-center justify-center text-[10px] bg-black">🤠</div>
+                <div className="w-6 h-6 rounded-full border border-warden-accent/20 flex items-center justify-center bg-black overflow-hidden">
+                  <img src="/logo.jpg" alt="" className="w-full h-full object-cover" />
+                </div>
                 {!streaming && msg.content && (
                   <button onClick={() => playTTS(msg.content)} className="text-[10px] text-zinc-600 hover:text-warden-accent" title="Play Voice">🔊</button>
                 )}

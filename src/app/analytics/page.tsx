@@ -46,6 +46,7 @@ export default function AnalyticsPage() {
           <Link href="/" className="text-zinc-500 hover:text-warden-accent transition-colors text-sm font-bold uppercase tracking-widest">
             ← Terminal
           </Link>
+          <img src="/logo.jpg" alt="" className="w-6 h-6 rounded-full border border-warden-accent/30" />
           <h1 className="text-lg font-black tracking-tighter uppercase">Agent<span className="text-warden-accent">Monitor</span></h1>
         </div>
         <div className="flex items-center gap-2 bg-warden-accent/5 px-3 py-1.5 rounded-md border border-warden-accent/20">

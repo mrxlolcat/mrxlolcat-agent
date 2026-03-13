@@ -34,7 +34,7 @@ export default function Landing({ onNavigate }: LandingProps) {
       <nav className="glass sticky top-0 z-50 border-b border-warden-border px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🤠</span>
+            <img src="/logo.jpg" alt="" className="w-6 h-6 rounded-full border border-warden-accent/30" />
             <span className="font-bold text-sm tracking-tight text-white uppercase">MRX <span className="text-warden-accent">LOLCAT</span></span>
           </div>
           <div className="flex items-center gap-4">
@@ -67,9 +67,11 @@ export default function Landing({ onNavigate }: LandingProps) {
       <section className="px-6 pt-16 pb-12 text-center flex flex-col items-center">
         <div className="relative mb-8 group">
           <div className="absolute inset-0 bg-warden-accent/20 blur-3xl rounded-full transition-opacity group-hover:bg-warden-accent/30" />
-          <div className="relative w-24 h-24 rounded-full border border-warden-accent/30 flex items-center justify-center text-5xl bg-black/50 backdrop-blur-xl">
-            🤠
-          </div>
+          <img 
+            src="/logo.jpg" 
+            alt="MRX LOLCAT" 
+            className="relative w-24 h-24 rounded-full border border-warden-accent/30 object-cover bg-black/50 backdrop-blur-xl"
+          />
           <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-warden-accent flex items-center justify-center text-[12px] border-4 border-black text-black font-bold animate-fade-in">
             ✓
           </div>
