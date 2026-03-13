@@ -63,14 +63,18 @@ export default async function RootLayout({
   const cookies = headersObj.get("cookie");
 
   return (
-    <html lang="en">
-      <body className="antialiased">
+    <html lang="en" dir="ltr">
+      <body dir="ltr" className="antialiased">
         <AppKitProvider cookies={cookies}>
           <MiniApp>
             {children}
             <Analytics />
           </MiniApp>
         </AppKitProvider>
+        <script dangerouslySetInnerHTML={{ __html: `
+          document.documentElement.setAttribute('dir', 'ltr');
+          document.body.setAttribute('dir', 'ltr');
+        `}} />
       </body>
     </html>
   );
