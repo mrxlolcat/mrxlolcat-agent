@@ -4,7 +4,7 @@ import { getHistory, saveMessage } from "../../../agents/memory-manager";
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages, fid, channel } = await req.json();
+    const { messages, fid, channel, modelId } = await req.json();
     const lastMessage = messages[messages.length - 1]?.content || "";
 
     let chatHistory: any[] = [];
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       await saveMessage(fid, "user", lastMessage);
     }
 
-    const model = await getModel();
+    const model = await getModel(modelId);
     if (model) {
       const { streamText } = await import("ai");
       

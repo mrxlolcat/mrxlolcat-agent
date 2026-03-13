@@ -1,6 +1,9 @@
 // USDC Contract configurations on Base
 export const USDC_BASE_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
-export const TIP_RECEIVER = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"; // Default Dev Address
+
+// TODO: UBAH ALAMAT INI MENJADI ALAMAT DOMPET BASE/FARCASTER ANDA ASLI 
+// Agar setiap tip USDC yang dikirim oleh user langsung masuk ke dompet Anda!
+export const TIP_RECEIVER = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"; 
 
 export const erc20Abi = [
   {

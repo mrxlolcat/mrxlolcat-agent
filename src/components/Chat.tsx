@@ -50,6 +50,7 @@ export default function Chat({ context, onBack }: ChatProps) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [streaming, setStreaming] = useState(false);
+  const [selectedModel, setSelectedModel] = useState("gpt-4o-mini");
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -97,6 +98,7 @@ export default function Chat({ context, onBack }: ChatProps) {
           messages: newMessages.slice(-20).map(({ role, content }) => ({ role, content })),
           fid: context?.user?.fid,
           channel: context?.location?.url || context?.location?.id || "default",
+          modelId: selectedModel,
         }),
       });
 
@@ -182,6 +184,17 @@ export default function Chat({ context, onBack }: ChatProps) {
             {loading ? "typing…" : streaming ? "streaming…" : `ai agent · ${messages.length} msgs`}
           </p>
         </div>
+        
+        <select
+          value={selectedModel}
+          onChange={(e) => setSelectedModel(e.target.value)}
+          className="bg-zinc-900 border border-zinc-700 text-zinc-300 text-[10px] rounded-lg px-2 py-1 outline-none focus:border-indigo-500 transition-colors"
+        >
+          <option value="gpt-4o-mini">GPT-4o Mini</option>
+          <option value="openrouter/anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+        </select>
+
         <button onClick={handleClear} className="text-[10px] text-zinc-600 hover:text-red-400 transition px-1.5 py-1" title="Clear">🗑️</button>
         <div className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-ring" />
       </header>
