@@ -1,51 +1,42 @@
-# mrxlolcat-agent
+# MRX LOLCAT Agent 🤠✨
 
-Farcaster Mini App — AI agent, token swap, launchpad, social feed, and DeFi lending in one interface.
+The high-tech AI automation terminal for the Farcaster Agentic Economy.
 
-## Services
+[![CI](https://github.com/mrxlolcat/mrxlolcat-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/mrxlolcat/mrxlolcat-agent/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-teal.svg)](https://opensource.org/licenses/MIT)
 
-| Service | Description |
-|---------|-------------|
-| **AI Agent** | Multi-model chat (GPT-4o, Claude, Gemini) with streaming and persistent memory |
-| **Swap** | Best price across 7 DEX aggregators on Ethereum, Base, Arbitrum, Polygon |
-| **Launchpad** | Deploy tokens with DEX liquidity on Base — atomic deploy in one tx |
-| **Social** | Real-time agent social feed with trending and global timeline |
-| **Lending** | DeFi lending position viewer — APR, supplied value, rewards |
+## 🚀 Features
+- **Automation Engine**: AI-driven on-chain task execution.
+- **Omnichain Bridge**: Powered by LI.FI (60+ chains).
+- **Long-Term Memory**: FID-based vector storage via Pinecone.
+- **Multi-LLM Reasoning**: GPT-4o, Claude 3.5, and Gemini support via OpenRouter.
+- **Interactive Frames**: Native Farcaster Mini App experience.
 
-## Deploy
+## ⚠️ Security Warning
+**NEVER share or store your private keys in plain text.** 
+MRX LOLCAT is designed to be non-custodial. All on-chain actions requiring signatures are handled via industry-standard providers (Wagmi/Reown). Always verify transaction details in your wallet before signing.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/mrxlolcat/mrxlolcat-agent&env=NEXT_PUBLIC_APP_URL)
+## 🛠️ Architecture
+Detailed documentation can be found in [ARCHITECTURE.md](./src/docs/ARCHITECTURE.md).
 
-**Environment variables:**
+## 🗺️ Roadmap
+- [x] v3.0: Modular Agent Core & LI.FI Integration
+- [ ] v3.1: Autonomous Portfolio Monitoring Alerts
+- [ ] v3.2: Multi-Agent Collaboration (Swarm Mode)
+- [ ] v4.0: Intent-based Direct Transaction Execution (AA)
 
-| Variable | Required | Default |
-|----------|----------|---------|
-| `NEXT_PUBLIC_APP_URL` | Yes | — |
-| `OPENAI_API_KEY` | No | Falls back to built-in personality engine |
-| `ANTHROPIC_API_KEY` | No | — |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | No | — |
-| `AI_MODEL` | No | `gpt-4o-mini` |
+## 📦 Getting Started
 
-## Development
+### Local Development
+1. Clone the repo.
+2. `npm install`
+3. Copy `.env.example` to `.env.local` and fill in the keys.
+4. `npm run dev`
 
+### Docker
 ```bash
-git clone https://github.com/mrxlolcat/mrxlolcat-agent.git
-cd mrxlolcat-agent
-npm install
-cp .env.example .env.local
-npm run dev
+docker compose up
 ```
 
-## Farcaster Setup
-
-1. Update URLs in `public/.well-known/farcaster.json`
-2. Sign manifest → `farcaster.xyz/~/developers/mini-apps/manifest?domain=YOUR_DOMAIN`
-3. Preview → `farcaster.xyz/~/developers/mini-apps/preview?url=YOUR_URL`
-
-## Stack
-
-Next.js 15 · React 19 · TypeScript · Tailwind CSS · Vercel AI SDK · Farcaster Mini App SDK · wagmi · viem
-
-## License
-
-MIT
+## 📄 License
+This project is licensed under the [MIT License](./LICENSE).

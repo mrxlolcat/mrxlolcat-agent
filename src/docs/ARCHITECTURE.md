@@ -1,32 +1,40 @@
-# MRX LOLCAT - Modular Agent Architecture
+# MRX LOLCAT - Architecture Overview
 
-This repository follows a professional, modular agent structure to ensure scalability, maintainability, and clean separation of concerns.
+## System Flow Diagram
 
-## Directory Structure
+```mermaid
+graph TD
+    A[User / Mini App] -->|Prompt/Action| B[Frontend]
+    B -->|API Request| C[Agent Controller]
+    C -->|Context/FID| D[Memory Manager]
+    D <-->|Vector Sync| E[(Pinecone DB)]
+    C -->|System Prompt| F[Agent Brain]
+    F -->|Reasoning| G[LLM Provider]
+    G -->|Selected Action| H[Tool Registry]
+    H -->|Execute| I[LI.FI Bridge]
+    H -->|Execute| J[Neynar Farcaster]
+    I -->|TX Receipt| B
+    J -->|Auto Cast| B
+```
 
-### `src/agent/`
-The core logic of the MRX LOLCAT agent.
-- **`core/`**: Personality, system prompts, and core identity.
-- **`tools/`**: Operational capabilities (Bridging via LI.FI, Farcaster casts via Neynar, Frame handlers).
-- **`memory/`**: Long-term state management using Pinecone Vector Database.
-- **`reasoning/`**: Decision-making logic, model selection (GPT-4o, Claude, Gemini), and fallback providers.
+## Modular Layers
 
-### `src/configs/`
-Centralized configurations and constants.
-- **`constants.ts`**: Chain IDs, Token addresses, and Fee settings.
-- **`lifi.ts`**: SDK initialization and global route options.
+### 1. **Core Layer (`src/agent/core/`)**
+Defines the "Identity" of the agent. This includes the persona (Cowboy Cat), the system instructions, and how it translates user intent into actions.
 
-### `src/app/`
-Next.js App Router hierarchy. API routes act as thin controllers that delegate logic to `src/agent/*`.
+### 2. **Reasoning Layer (`src/agent/reasoning/`)**
+The decision-making hub. It handles model selection (OpenRouter, GPT-4o, Claude) and fallback logic if a provider is down.
 
-### `src/components/`
-Modular UI components categorized by function (Bridge, Analytics, Chat).
+### 3. **Memory Layer (`src/agent/memory/`)**
+Maintains long-term state across sessions. Every interaction is vectorized using OpenAI embeddings and stored in Pinecone, keyed by Farcaster ID (FID).
 
-## Performance Targets
-- **JS Bundle**: < 200kb
-- **TTFB**: < 1s
-- **Responsiveness**: Fully adaptive (Desktop & Mini App)
+### 4. **Tools Layer (`src/agent/tools/`)**
+The operational arm. Contains specialized integrations for blockchain interactions (LI.FI), social publishing (Neynar), and interactive UI elements (Frames).
 
-## Security
-- **SPEx Verified**: Statistical Proof of Execution for on-chain actions.
-- **Non-Custodial**: Wallet interactions are handled via standard providers (Wagmi/Reown).
+### 5. **Config Layer (`src/configs/`)**
+Centralized constants for Chain IDs, Token addresses, and Fee management (0.1% platform fee to Partner Wallet).
+
+## Data Integrity & Security
+- **Non-Custodial**: User signatures are handled via Wagmi/Reown.
+- **SPEx**: Statistical Proof of Execution for on-chain verification.
+- **Environment Driven**: No hardcoded API keys. All configuration is injected via `.env`.
