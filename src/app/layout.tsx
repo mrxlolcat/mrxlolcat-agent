@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import "./globals.css";
 import AppKitProvider from "@/context";
 import { Analytics } from "@vercel/analytics/react";
+import MiniApp from "../base/MiniApp";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mrxlolcat-agent.vercel.app";
 
@@ -47,8 +48,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <AppKitProvider cookies={cookies}>
-          {children}
-          <Analytics />
+          <MiniApp>
+            {children}
+            <Analytics />
+          </MiniApp>
         </AppKitProvider>
       </body>
     </html>

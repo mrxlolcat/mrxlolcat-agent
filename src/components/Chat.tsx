@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useAccount } from "wagmi";
 // Context type from Farcaster SDK
 import { loadHistory, saveHistory, clearHistory, type StoredMessage } from "~/lib/memory";
 
@@ -29,6 +30,7 @@ function TypingDots() {
 }
 
 export default function Chat({ context, onBack }: ChatProps) {
+  const { address } = useAccount();
   const user = context?.user?.displayName || context?.user?.username || "anon";
   const pfp = context?.user?.pfpUrl;
 
@@ -99,6 +101,7 @@ export default function Chat({ context, onBack }: ChatProps) {
           fid: context?.user?.fid,
           channel: context?.location?.url || context?.location?.id || "default",
           modelId: selectedModel,
+          walletAddress: address,
         }),
       });
 

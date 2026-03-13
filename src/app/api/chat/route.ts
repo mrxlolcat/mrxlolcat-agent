@@ -1,10 +1,10 @@
 import { NextRequest } from "next/server";
-import { getSystemPrompt, getModel, localResponse } from "../../../agents/cat-persona";
-import { getHistory, saveMessage } from "../../../agents/memory-manager";
+import { getSystemPrompt, getModel, localResponse } from "../../../agents/cat-brain";
+import { getHistory, saveMessage } from "../../../agents/memory";
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages, fid, channel, modelId } = await req.json();
+    const { messages, fid, channel, modelId, walletAddress } = await req.json();
     const lastMessage = messages[messages.length - 1]?.content || "";
 
     let chatHistory: any[] = [];
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     // Gunakan Memory Manager (Pinecone) untuk mengambil histori chat per FID
     if (fid) {
       chatHistory = await getHistory(fid);
-      await saveMessage(fid, "user", lastMessage);
+      await saveMessage(fid, "user", lastMessage, walletAddress);
     }
 
     const model = await getModel(modelId);
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
       const result = streamText({
         model,
-        system: getSystemPrompt(channel),
+        system: getSystemPrompt(channel, walletAddress),
         messages: fullMessages,
         maxTokens: 500,
         temperature: 0.9,

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { handleCatGameFrame } from "../../../integrations/frames-handler";
+import { handleCatGameFrame } from "../../../agents/frames-v2";
 
 export async function POST(req: NextRequest) {
   try {

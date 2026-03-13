@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
 import { parseUnits } from "viem";
-import { USDC_BASE_ADDRESS, TIP_RECEIVER, erc20Abi } from "../integrations/tipjar";
+import { USDC_BASE_ADDRESS, TIP_RECEIVER, erc20Abi } from "../base/tipjar";
 
 interface TipjarProps {
   onBack: () => void;

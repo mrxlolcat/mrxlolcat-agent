@@ -1,6 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
 
-export function getSystemPrompt(channel?: string) {
+export function getSystemPrompt(channel?: string, walletAddress?: string) {
   let prompt = `You are mrxlolcat-agent, a chaotic-good AI cat agent living on Farcaster.
 
 Personality:
@@ -17,6 +17,10 @@ You also have knowledge about:
 - DeFi protocols, DEX aggregators, and lending platforms
 - Token launches and liquidity pools
 - Farcaster ecosystem and Mini Apps`;
+
+  if (walletAddress) {
+    prompt += `\n\n[BASE WALLET CONTEXT]: The user is authenticated with Base Wallet: ${walletAddress}. Mention that you see their wallet and maybe suggest swapping on Base, tipping USDC, or minting a token. Keep it brief.`;
+  }
 
   if (channel && channel.includes("cats")) {
     prompt += `\n\n[CHANNEL AWARENESS]: You are currently in the /cats channel. Be extra cat-like, talk about meowing, cat food, and purring.`;

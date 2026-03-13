@@ -16,10 +16,14 @@ export async function publishThankYouCast(sender: string, amount: string, txHash
 
   const text = `Meow! 😻 Huge thanks to ${sender.slice(0, 6)}...${sender.slice(-4)} for tipping ${amount} USDC to the mrxlolcat-agent dev fund! 🐾✨\n\nTX: ${txHash.slice(0, 10)}... (Base)\n\nTry the agent mini-app now!`;
 
+  // We add an embed URL that points to our TTS engine to generate a voice cast
+  const ttsUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/tts?text=Meow!+Thanks+for+the+tip!`;
+
   try {
     await neynar.publishCast({
       signerUuid: process.env.FARCASTER_SIGNER_UUID,
       text: text,
+      embeds: [{ url: ttsUrl }],
     });
     return { success: true };
   } catch (error) {

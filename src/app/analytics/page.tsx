@@ -6,9 +6,9 @@ import Link from "next/link";
 export default function Dashboard() {
   const [metrics] = useState({
     totalChats: 12450,
-    activeFIDs: 342,
+    baseTxVolume: 3420,
     usdcTipped: 145.5,
-    frameClicks: 890,
+    totalCasts: 890,
   });
 
   return (
@@ -16,7 +16,7 @@ export default function Dashboard() {
       <header className="flex items-center justify-between mb-8 border-b border-zinc-800 pb-4">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-zinc-400 hover:text-white transition">← Back</Link>
-          <h1 className="text-xl font-bold gradient-text">Cat Agent Analytics</h1>
+          <h1 className="text-xl font-bold gradient-text">Cat Agent Analytics (Base)</h1>
         </div>
         <div className="flex items-center gap-2 text-[12px] text-green-400 bg-green-400/10 px-3 py-1 rounded-full">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Live
@@ -29,16 +29,16 @@ export default function Dashboard() {
           <div className="text-3xl font-bold text-indigo-400">{metrics.totalChats.toLocaleString()}</div>
         </div>
         <div className="card p-5 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
-          <div className="text-zinc-400 text-sm mb-1">Active FIDs</div>
-          <div className="text-3xl font-bold text-blue-400">{metrics.activeFIDs.toLocaleString()}</div>
+          <div className="text-zinc-400 text-sm mb-1">Base TX Volume</div>
+          <div className="text-3xl font-bold text-blue-400">{metrics.baseTxVolume.toLocaleString()} txs</div>
         </div>
         <div className="card p-5 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
-          <div className="text-zinc-400 text-sm mb-1">USDC Tipped</div>
+          <div className="text-zinc-400 text-sm mb-1">USDC Tipped (Base)</div>
           <div className="text-3xl font-bold text-green-400">${metrics.usdcTipped}</div>
         </div>
         <div className="card p-5 bg-zinc-900/50 border border-zinc-800 rounded-2xl">
-          <div className="text-zinc-400 text-sm mb-1">Frame Interactions</div>
-          <div className="text-3xl font-bold text-pink-400">{metrics.frameClicks.toLocaleString()}</div>
+          <div className="text-zinc-400 text-sm mb-1">Auto Casts Published</div>
+          <div className="text-3xl font-bold text-pink-400">{metrics.totalCasts.toLocaleString()}</div>
         </div>
       </div>
     </div>

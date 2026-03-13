@@ -11,6 +11,7 @@ export const redis = null; // Removed upstash redis to prevent reference errors
 
 interface AgentMemoryMetadata extends RecordMetadata {
   fid: string;
+  walletAddress: string;
   role: string;
   content: string;
   timestamp: number;
@@ -19,7 +20,6 @@ interface AgentMemoryMetadata extends RecordMetadata {
 // Fungsi pembantu untuk membuat vektor embedding nyata dari teks
 async function getEmbedding(text: string): Promise<number[]> {
   if (!process.env.OPENAI_API_KEY) {
-    // Fallback vector jika tidak ada API key OpenAI
     return Array(1536).fill(0);
   }
   
@@ -41,8 +41,6 @@ export async function getHistory(fid: string, limit: number = 10) {
   try {
     const index = pc.Index<AgentMemoryMetadata>(indexName);
     
-    // Karena kita tidak mencari query semantik (belum ada user input spesifik),
-    // kita mencari vektor dummy dengan filter FID yang kuat untuk mengambil historis secara urut waktu
     const queryResponse = await index.query({
       topK: limit,
       vector: Array(1536).fill(0),
@@ -52,11 +50,10 @@ export async function getHistory(fid: string, limit: number = 10) {
 
     if (!queryResponse.matches) return [];
 
-    // Mengurutkan pesan berdasarkan timestamp
     const sorted = queryResponse.matches.sort((a, b) => {
       const timeA = a.metadata?.timestamp || 0;
       const timeB = b.metadata?.timestamp || 0;
-      return timeA - timeB; // ascending
+      return timeA - timeB;
     });
 
     return sorted.map(m => ({
@@ -69,7 +66,7 @@ export async function getHistory(fid: string, limit: number = 10) {
   }
 }
 
-export async function saveMessage(fid: string, role: "user" | "assistant", content: string) {
+export async function saveMessage(fid: string, role: "user" | "assistant", content: string, walletAddress?: string) {
   if (!pc || !fid) return;
   
   try {
@@ -77,7 +74,6 @@ export async function saveMessage(fid: string, role: "user" | "assistant", conte
     const timestamp = Date.now();
     const id = `msg_${fid}_${timestamp}`;
 
-    // Generate vektor sungguhan dari konten pesan
     const vectorData = await getEmbedding(content);
 
     await index.upsert([{
@@ -85,6 +81,7 @@ export async function saveMessage(fid: string, role: "user" | "assistant", conte
       values: vectorData,
       metadata: {
         fid,
+        walletAddress: walletAddress || "",
         role,
         content,
         timestamp,
