@@ -1,22 +1,25 @@
 import { getRoutes, executeRoute } from '@lifi/sdk';
-import './config'; // Ensures global config is loaded
+import { lifiConfig } from './config';
 
 export interface BridgeParams {
-  fromChain: number;
-  toChain: number;
-  fromToken: string;
-  toToken: string;
-  amount: string;
+  fid: string;
+  fromChain?: number;
+  toChain?: number;
+  fromToken?: string;
+  toToken?: string;
+  amount?: string;
 }
 
-export async function getBestRoute({
-  fromChain, 
-  toChain, 
-  fromToken, 
-  toToken, 
-  amount
+export async function catBridge({
+  fid, 
+  fromChain = 8453, // Base
+  toChain = 10,     // Optimism
+  fromToken = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC Base
+  toToken = '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC OP
+  amount = '1000000' // 1 USDC
 }: BridgeParams) {
-  // We no longer need to pass options manually because they are set in the global config!
+  
+  // OFFICIAL LI.FI route logic using the globally initialized config
   const routesResponse = await getRoutes({
     fromChainId: fromChain,
     toChainId: toChain,
@@ -29,13 +32,9 @@ export async function getBestRoute({
     throw new Error('No valid routes found');
   }
 
-  // Best route automatically placed at index 0 by LI.FI API
-  return routesResponse.routes[0];
-}
-
-// Additional helper for direct execution (e.g., inside an API or Node context)
-export async function executeBestRoute(route: any) {
-  // Execute the route (this usually requires a signer/wallet to be passed in real scenarios)
-  // This is a placeholder for the agent's logic.
-  return await executeRoute(route);
+  const bestRoute = routesResponse.routes[0];
+  
+  // Return the route. In a real scenario, this would be passed to `executeRoute(bestRoute)`
+  // after getting a signer from the user's wallet via wagmi.
+  return bestRoute;
 }

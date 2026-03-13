@@ -3,7 +3,6 @@
 import { LiFiWidget } from '@lifi/widget';
 
 export function LifiWidgetEmbed() {
-  // Official configuration properties mapped directly from @lifi/widget
   const widgetConfig = {
     integrator: 'mrxlolcat-agent',
     theme: {
@@ -17,11 +16,14 @@ export function LifiWidgetEmbed() {
         fontFamily: 'inherit',
       },
     },
-    fee: 0.001, // 0.1% platform fee
-    // @ts-ignore - Some versions map this as a top-level prop or inside a specific options object. 
-    // The safest method that won't break the build is to ignore this specific line if types mismatch,
-    // as the widget usually accepts extended configs gracefully at runtime.
-    feeRecipient: '0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5',
+    // Fees in the widget are properly handled via sdkConfig in newer versions
+    sdkConfig: {
+      routeOptions: {
+        fee: 0.001, // 0.1% platform fee
+        feeRecipient: '0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5',
+      },
+    },
+    buildUrl: true,
   };
 
   return (
