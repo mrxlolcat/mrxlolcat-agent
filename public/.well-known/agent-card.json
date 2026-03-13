@@ -1,0 +1,1 @@
+{\n  "name": "MRX LOLCAT Agent",\n  "description": "Standard discovery card for MRX LOLCAT A2A interactions.",\n  "capabilities": ["bridge", "monitor", "social"]\n}
