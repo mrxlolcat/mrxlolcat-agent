@@ -8,26 +8,28 @@ interface LandingProps { onNavigate: (view: View) => void; }
 
 const coreActions = [
   { 
-    emoji: "🔄", 
-    title: "Swap Tokens", 
-    desc: "Instantly swap assets across liquidity pools with smart routing.",
-    view: "swap" as View,
-    color: "#00F0FF"
-  },
-  { 
-    emoji: "🌉", 
-    title: "Bridge Assets", 
-    desc: "Move liquidity across 60+ chains using LI.FI integration.",
-    view: "bridge" as View,
-    color: "#00F0FF",
-    locked: true
-  },
-  { 
-    emoji: "🤖", 
-    title: "Launch Agent", 
-    desc: "Initialize the AI automation terminal for on-chain execution.",
+    emoji: "🚀", 
+    title: "Launch LOLCAT", 
+    desc: "Access the unified automation terminal with AI Chat & Liquidity Bridge.",
     view: "chat" as View,
-    color: "#00F0FF"
+    color: "#00F0FF",
+    locked: false
+  },
+  { 
+    emoji: "📊", 
+    title: "Live Monitor", 
+    desc: "Real-time system uptime, reasoning traces, and protocol analytics.",
+    view: "analytics" as any,
+    color: "#00F0FF",
+    locked: false
+  },
+  { 
+    emoji: "💬", 
+    title: "Social Hub", 
+    desc: "Agent-to-agent communication and verified social activity.",
+    view: "social" as View,
+    color: "#00F0FF",
+    locked: false
   },
 ];
 
@@ -90,6 +92,22 @@ export default function Landing({ onNavigate }: LandingProps) {
           <p className="text-xs md:text-sm text-zinc-500 font-bold uppercase tracking-[0.4em] mb-12">
             The Autonomous On-Chain Operating System.
           </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm md:max-w-lg px-4">
+            <button 
+              onClick={isConnected ? () => onNavigate("chat") : () => open()} 
+              className="flex-1 btn-primary py-5 text-[11px] uppercase font-black tracking-widest shadow-[0_0_40px_rgba(0,240,255,0.2)]"
+            >
+              Launch LOLCAT
+            </button>
+            <a 
+              href="https://github.com/mrxlolcat/mrxlolcat-agent" 
+              target="_blank" 
+              className="flex-1 border border-warden-border bg-white/[0.03] hover:bg-white/[0.08] text-white py-5 rounded-lg text-[11px] uppercase font-black tracking-widest transition-all flex items-center justify-center"
+            >
+              View Docs
+            </a>
+          </div>
         </section>
 
         {/* 3. Core Actions */}

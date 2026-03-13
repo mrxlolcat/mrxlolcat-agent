@@ -59,11 +59,11 @@ export default function Swap({ onBack, initialMode = 'bridge' }: SwapProps) {
       </nav>
 
       {/* Widget Container */}
-      <div className="flex-1 overflow-y-auto px-2 py-6 flex flex-col items-center">
-        <div className="w-full max-w-md animate-fade-in">
+      <div className="flex-1 overflow-y-auto px-4 py-8 flex flex-col items-center">
+        <div className="w-full max-w-xl animate-fade-in">
            <LifiWidgetEmbed />
         </div>
-        <p className="text-[9px] text-zinc-700 font-mono mt-8 uppercase tracking-[0.3em]">Securely routed via LI.FI Protocol</p>
+        <p className="text-[10px] text-zinc-700 font-mono mt-12 uppercase tracking-[0.4em] text-center">Securely routed via LI.FI Protocol v3</p>
       </div>
     </div>
   );

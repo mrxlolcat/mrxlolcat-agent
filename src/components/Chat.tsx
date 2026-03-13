@@ -174,106 +174,112 @@ export default function Chat({ context, onBack }: ChatProps) {
   return (
     <div className="flex flex-col h-screen h-[100dvh] max-h-screen bg-black">
       {/* Header */}
-      <header className="glass sticky top-0 z-50 flex items-center gap-3 px-4 py-3 border-b border-warden-border shrink-0">
-        {onBack && (
-          <button onClick={onBack} className="text-zinc-500 hover:text-white transition text-sm">←</button>
-        )}
-        <div className="w-9 h-9 rounded-full flex items-center justify-center border border-warden-accent/30 bg-black overflow-hidden">
-          <img src="/logo.jpg" alt="" className="w-full h-full object-cover" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="font-bold text-[11px] uppercase tracking-widest text-white">MRX<span className="text-warden-accent">LOLCAT</span></h1>
-          <p className="text-[9px] font-mono text-zinc-500 uppercase">
-            {loading ? "processing…" : streaming ? "streaming…" : `active · v3.0`}
-          </p>
-        </div>
-        
-        <select
-          value={selectedModel}
-          onChange={(e) => setSelectedModel(e.target.value)}
-          className="bg-black border border-warden-border text-zinc-400 text-[9px] font-bold uppercase rounded-md px-2 py-1 outline-none focus:border-warden-accent transition-colors"
-        >
-          <option value="gpt-4o-mini">GPT-4o</option>
-          <option value="openrouter/anthropic/claude-3.5-sonnet">Claude 3.5</option>
-          <option value="gemini-2.0-flash">Gemini 2.0</option>
-        </select>
+      <header className="glass sticky top-0 z-50 flex items-center justify-center border-b border-warden-border shrink-0 px-4 py-3">
+        <div className="max-w-3xl w-full flex items-center gap-3">
+          {onBack && (
+            <button onClick={onBack} className="text-zinc-500 hover:text-white transition text-sm">←</button>
+          )}
+          <div className="w-9 h-9 rounded-full flex items-center justify-center border border-warden-accent/30 bg-black overflow-hidden">
+            <img src="/logo.jpg" alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="font-bold text-[11px] uppercase tracking-widest text-white">MRX<span className="text-warden-accent">LOLCAT</span></h1>
+            <p className="text-[9px] font-mono text-zinc-500 uppercase">
+              {loading ? "processing…" : streaming ? "streaming…" : `active · v3.0`}
+            </p>
+          </div>
+          
+          <select
+            value={selectedModel}
+            onChange={(e) => setSelectedModel(e.target.value)}
+            className="bg-black border border-warden-border text-zinc-400 text-[9px] font-bold uppercase rounded-md px-2 py-1 outline-none focus:border-warden-accent transition-colors"
+          >
+            <option value="gpt-4o-mini">GPT-4o</option>
+            <option value="openrouter/anthropic/claude-3.5-sonnet">Claude 3.5</option>
+            <option value="gemini-2.0-flash">Gemini 2.0</option>
+          </select>
 
-        <button onClick={handleClear} className="text-[10px] text-zinc-600 hover:text-red-400 transition px-1.5 py-1" title="Clear">🗑️</button>
-        <div className="w-1.5 h-1.5 rounded-full bg-warden-accent pulse-ring" />
+          <button onClick={handleClear} className="text-[10px] text-zinc-600 hover:text-red-400 transition px-1.5 py-1" title="Clear">🗑️</button>
+          <div className="w-1.5 h-1.5 rounded-full bg-warden-accent pulse-ring" />
+        </div>
       </header>
 
       {/* Messages */}
-      <main className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`animate-fade-in flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
-          >
-            {msg.role === "assistant" && (
-              <div className="flex flex-col items-center gap-2 shrink-0 mt-1">
-                <div className="w-6 h-6 rounded-full border border-warden-accent/20 flex items-center justify-center bg-black overflow-hidden">
-                  <img src="/logo.jpg" alt="" className="w-full h-full object-cover" />
-                </div>
-                {!streaming && msg.content && (
-                  <button onClick={() => playTTS(msg.content)} className="text-[10px] text-zinc-600 hover:text-warden-accent" title="Play Voice">🔊</button>
-                )}
-              </div>
-            )}
+      <main className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="max-w-3xl mx-auto space-y-6">
+          {messages.map((msg) => (
             <div
-              className={`max-w-[85%] rounded-xl px-4 py-3 text-[13px] leading-relaxed whitespace-pre-wrap ${
-                msg.role === "user"
-                  ? "bg-warden-accent text-black font-bold rounded-tr-none shadow-[0_0_20px_rgba(0,240,255,0.1)]"
-                  : "bg-zinc-900/40 text-zinc-200 border border-warden-border rounded-tl-none font-medium"
-              }`}
+              key={msg.id}
+              className={`animate-fade-in flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
             >
-              {msg.content}
+              {msg.role === "assistant" && (
+                <div className="flex flex-col items-center gap-2 shrink-0 mt-1">
+                  <div className="w-6 h-6 rounded-full border border-warden-accent/20 flex items-center justify-center bg-black overflow-hidden">
+                    <img src="/logo.jpg" alt="" className="w-full h-full object-cover" />
+                  </div>
+                  {!streaming && msg.content && (
+                    <button onClick={() => playTTS(msg.content)} className="text-[10px] text-zinc-600 hover:text-warden-accent" title="Play Voice">🔊</button>
+                  )}
+                </div>
+              )}
+              <div
+                className={`max-w-[85%] rounded-xl px-4 py-3 text-[13px] leading-relaxed whitespace-pre-wrap ${
+                  msg.role === "user"
+                    ? "bg-warden-accent text-black font-bold rounded-tr-none shadow-[0_0_20px_rgba(0,240,255,0.1)]"
+                    : "bg-zinc-900/40 text-zinc-200 border border-warden-border rounded-tl-none font-medium"
+                }`}
+              >
+                {msg.content}
+              </div>
             </div>
-          </div>
-        ))}
-        {loading && <TypingDots />}
-        <div ref={endRef} />
+          ))}
+          {loading && <TypingDots />}
+          <div ref={endRef} />
+        </div>
       </main>
 
       {/* Input Area */}
       <footer className="p-4 glass border-t border-warden-border shrink-0">
-        {/* Quick Actions / Example Tasks */}
-        <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-1">
-          {[
-            "swap 10 usdc to eth",
-            "monitor my wallet",
-            "bridge base -> op",
-            "alert eth > $3k",
-          ].map(task => (
-            <button
-              key={task}
-              onClick={() => setInput(task)}
-              className="chip chip-inactive whitespace-nowrap lowercase font-mono bg-zinc-900/50 hover:bg-warden-accent/10 hover:border-warden-accent/30 transition-all text-[9px]"
-            >
-              {task}
-            </button>
-          ))}
-        </div>
+        <div className="max-w-3xl mx-auto">
+          {/* Quick Actions / Example Tasks */}
+          <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-1">
+            {[
+              "swap 10 usdc to eth",
+              "monitor my wallet",
+              "bridge base -> op",
+              "alert eth > $3k",
+            ].map(task => (
+              <button
+                key={task}
+                onClick={() => setInput(task)}
+                className="chip chip-inactive whitespace-nowrap lowercase font-mono bg-zinc-900/50 hover:bg-warden-accent/10 hover:border-warden-accent/30 transition-all text-[9px]"
+              >
+                {task}
+              </button>
+            ))}
+          </div>
 
-        <div className="flex gap-2 max-w-sm mx-auto">
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
-            placeholder="TYPE COMMAND..."
-            disabled={loading}
-            className="flex-1 bg-black border border-warden-border rounded-lg px-4 py-3 text-[13px] text-white focus:border-warden-accent transition-all placeholder:text-zinc-800 font-mono uppercase tracking-wider"
-          />
-          <button
-            onClick={send}
-            disabled={loading || !input.trim()}
-            className="w-12 h-12 rounded-lg bg-warden-accent text-black flex items-center justify-center disabled:opacity-20 transition-all hover:shadow-[0_0_15px_rgba(0,240,255,0.3)] active:scale-95"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-              <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-            </svg>
-          </button>
+          <div className="flex gap-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
+              placeholder="TYPE COMMAND..."
+              disabled={loading}
+              className="flex-1 bg-black border border-warden-border rounded-lg px-4 py-3 text-[13px] text-white focus:border-warden-accent transition-all placeholder:text-zinc-800 font-mono uppercase tracking-wider"
+            />
+            <button
+              onClick={send}
+              disabled={loading || !input.trim()}
+              className="w-12 h-12 rounded-lg bg-warden-accent text-black flex items-center justify-center disabled:opacity-20 transition-all hover:shadow-[0_0_15px_rgba(0,240,255,0.3)] active:scale-95"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </footer>
     </div>
