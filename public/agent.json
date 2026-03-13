@@ -28,7 +28,12 @@
     },
     {
       "type": "a2a",
-      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json"
+      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json",
+      "a2aSkills": [
+        "bridge",
+        "monitor",
+        "social"
+      ]
     },
     {
       "type": "oasf",

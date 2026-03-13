@@ -1,5 +1,6 @@
 {
   "name": "MRX LOLCAT Agent",
   "description": "Standard discovery card for MRX LOLCAT A2A interactions.",
+  "skills": ["bridge", "monitor", "social"],
   "capabilities": ["bridge", "monitor", "social"]
 }
