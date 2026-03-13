@@ -1,10 +1,12 @@
 "use client";
 
 import { LiFiWidget } from '@lifi/widget';
+import { FEE_BPS, DEFAULT_FEE_WALLET, CHAINS } from './constants';
 
 export function LifiWidgetEmbed() {
   const widgetConfig = {
     integrator: 'mrxlolcat-agent',
+    fromChain: CHAINS.BASE,
     theme: {
       palette: {
         primary: { main: '#6366f1' },
@@ -19,8 +21,8 @@ export function LifiWidgetEmbed() {
     // Fees in the widget are properly handled via sdkConfig in newer versions
     sdkConfig: {
       routeOptions: {
-        fee: 0.001, // 0.1% platform fee
-        feeRecipient: '0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5',
+        fee: FEE_BPS / 10000,
+        feeRecipient: DEFAULT_FEE_WALLET,
       },
     },
     buildUrl: true,

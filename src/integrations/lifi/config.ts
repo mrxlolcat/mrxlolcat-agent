@@ -1,10 +1,11 @@
 import { createConfig } from '@lifi/sdk';
+import { FEE_BPS, DEFAULT_FEE_WALLET } from './constants';
 
 export const lifiConfig = createConfig({
   integrator: 'mrxlolcat-agent',
-  // In v3, routeOptions handles fees. BPS 10 = 0.001 (0.1%)
+  // In v3, routeOptions handles fees.
   routeOptions: {
-    fee: 0.001,
-    feeRecipient: process.env.PARTNER_WALLET_BASE || '0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5',
+    fee: FEE_BPS / 10000, // 10 BPS -> 0.001 (0.1%)
+    feeRecipient: process.env.PARTNER_WALLET_BASE || DEFAULT_FEE_WALLET,
   } as any
 });

@@ -1,5 +1,6 @@
 import { getRoutes, executeRoute } from '@lifi/sdk';
 import { lifiConfig } from './config';
+import { CHAINS, TOKENS } from './constants';
 
 export interface BridgeParams {
   fid: string;
@@ -12,10 +13,10 @@ export interface BridgeParams {
 
 export async function catBridge({
   fid, 
-  fromChain = 8453, // Base
-  toChain = 10,     // Optimism
-  fromToken = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC Base
-  toToken = '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', // USDC OP
+  fromChain = CHAINS.BASE,
+  toChain = CHAINS.OPTIMISM,
+  fromToken = TOKENS.USDC_BASE,
+  toToken = TOKENS.USDC_OP,
   amount = '1000000' // 1 USDC
 }: BridgeParams) {
   

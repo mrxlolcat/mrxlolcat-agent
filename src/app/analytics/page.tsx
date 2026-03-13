@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import RevenueDashboard from "./revenue";
+import RevenueDashboard from "../../integrations/lifi/dashboard";
 
 export default function Dashboard() {
   const [metrics] = useState({
