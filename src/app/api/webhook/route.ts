@@ -1,58 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
-import {
-  storeNotificationToken,
-  removeNotificationToken,
-} from "~/lib/notifications";
+import { NextRequest } from "next/server";
+import { handleCatGameFrame } from "../../../integrations/frames-handler";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const payload = JSON.parse(
-      Buffer.from(body.payload, "base64url").toString()
-    );
+    const buttonIndex = body?.untrustedData?.buttonIndex || 1;
 
-    const fid = payload.fid?.toString() || "unknown";
+    // Gunakan frame handler dari modul agents
+    const html = handleCatGameFrame(buttonIndex);
 
-    switch (payload.event) {
-      case "miniapp_added":
-        if (payload.notificationDetails) {
-          storeNotificationToken(
-            fid,
-            payload.notificationDetails.url,
-            payload.notificationDetails.token
-          );
-        }
-        console.log(`[mrxlolcat-agent] user ${fid} added the app`);
-        break;
-
-      case "miniapp_removed":
-        removeNotificationToken(fid);
-        console.log(`[mrxlolcat-agent] user ${fid} removed the app`);
-        break;
-
-      case "notifications_enabled":
-        if (payload.notificationDetails) {
-          storeNotificationToken(
-            fid,
-            payload.notificationDetails.url,
-            payload.notificationDetails.token
-          );
-        }
-        console.log(`[mrxlolcat-agent] user ${fid} enabled notifications`);
-        break;
-
-      case "notifications_disabled":
-        removeNotificationToken(fid);
-        console.log(`[mrxlolcat-agent] user ${fid} disabled notifications`);
-        break;
-
-      default:
-        console.log(`[mrxlolcat-agent] unknown event: ${payload.event}`);
-    }
-
-    return NextResponse.json({ success: true });
+    return new Response(html, { headers: { 'Content-Type': 'text/html' } });
   } catch (error) {
-    console.error("[mrxlolcat-agent] webhook error:", error);
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+    return new Response("Error processing frame", { status: 500 });
   }
 }

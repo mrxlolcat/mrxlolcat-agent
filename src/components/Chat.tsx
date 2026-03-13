@@ -95,6 +95,8 @@ export default function Chat({ context, onBack }: ChatProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: newMessages.slice(-20).map(({ role, content }) => ({ role, content })),
+          fid: context?.user?.fid,
+          channel: context?.location?.url || context?.location?.id || "default",
         }),
       });
 
@@ -148,6 +150,22 @@ export default function Chat({ context, onBack }: ChatProps) {
     }
   }, [input, loading, messages]);
 
+  const playTTS = async (text: string) => {
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!res.ok) return;
+      const blob = await res.blob();
+      const audio = new Audio(URL.createObjectURL(blob));
+      audio.play();
+    } catch (e) {
+      console.error("TTS error", e);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen h-[100dvh] max-h-screen" style={{ background: "#09090B" }}>
       {/* Header */}
@@ -176,7 +194,12 @@ export default function Chat({ context, onBack }: ChatProps) {
             className={`animate-fade-in flex items-end gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
           >
             {msg.role === "assistant" && (
-              <div className="w-6 h-6 rounded-xl flex items-center justify-center text-[10px] shrink-0" style={{ background: "linear-gradient(135deg, #6366F1, #A78BFA)" }}>🐱</div>
+              <div className="flex flex-col items-center gap-1 shrink-0">
+                <div className="w-6 h-6 rounded-xl flex items-center justify-center text-[10px]" style={{ background: "linear-gradient(135deg, #6366F1, #A78BFA)" }}>🐱</div>
+                {!streaming && msg.content && (
+                  <button onClick={() => playTTS(msg.content)} className="text-[10px] text-zinc-500 hover:text-indigo-400" title="Play Voice">🔊</button>
+                )}
+              </div>
             )}
             {msg.role === "user" && pfp && (
               <img src={pfp} alt="" className="w-7 h-7 rounded-full shrink-0 object-cover" />

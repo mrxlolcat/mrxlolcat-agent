@@ -2,16 +2,17 @@
 
 import type { View } from "~/app/page";
 import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
+import Link from "next/link";
 
 interface LandingProps { onNavigate: (view: View) => void; }
 
 const features = [
   { emoji: "🤖", title: "AI Agent", desc: "Multi-model streaming chat with persistent memory", view: "chat" as View, color: "#818CF8" },
+  { emoji: "💸", title: "Tipjar", desc: "Support us with USDC & get a shoutout", view: "tipjar" as View, color: "#10B981", locked: true },
   { emoji: "🔄", title: "Swap", desc: "Best price across 7 DEX aggregators, 10+ chains", view: "swap" as View, color: "#34D399", locked: true },
   { emoji: "🚀", title: "Launchpad", desc: "Deploy tokens with liquidity for 0.0001 ETH", view: "launchpad" as View, color: "#F472B6", locked: true },
   { emoji: "💬", title: "Social", desc: "Real-time AI agent social feed & discovery", view: "social" as View, color: "#60A5FA" },
   { emoji: "🏦", title: "Lending", desc: "DeFi lending positions & APR tracker", view: "lending" as View, color: "#FBBF24", locked: true },
-  { emoji: "🌉", title: "Bridge", desc: "Cross-chain asset bridge via Reown", view: "swap" as View, color: "#A78BFA", locked: true },
 ];
 
 export default function Landing({ onNavigate }: LandingProps) {
@@ -32,25 +33,30 @@ export default function Landing({ onNavigate }: LandingProps) {
             <span className="text-lg">🐱</span>
             <span className="font-bold text-sm gradient-text">mrxlolcat</span>
           </div>
-          <button
-            onClick={() => open()}
-            className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
-            style={isConnected ? {
-              background: "rgba(34, 197, 94, 0.1)",
-              border: "1px solid rgba(34, 197, 94, 0.2)",
-              color: "#4ADE80",
-            } : {
-              background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
-              color: "white",
-            }}
-          >
-            {isConnected ? (
-              <>
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-ring" />
-                {address?.slice(0, 6)}...{address?.slice(-4)}
-              </>
-            ) : "Connect Wallet"}
-          </button>
+          <div className="flex items-center gap-3">
+            <Link href="/analytics" className="text-[11px] text-zinc-400 hover:text-white transition">
+              📊 Analytics
+            </Link>
+            <button
+              onClick={() => open()}
+              className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
+              style={isConnected ? {
+                background: "rgba(34, 197, 94, 0.1)",
+                border: "1px solid rgba(34, 197, 94, 0.2)",
+                color: "#4ADE80",
+              } : {
+                background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
+                color: "white",
+              }}
+            >
+              {isConnected ? (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-ring" />
+                  {address?.slice(0, 6)}...{address?.slice(-4)}
+                </>
+              ) : "Connect Wallet"}
+            </button>
+          </div>
         </div>
       </nav>
 
