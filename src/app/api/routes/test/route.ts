@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRoutes } from '@lifi/sdk';
-import '../../../../integrations/lifi/config';
-import { CHAINS, TOKENS } from '../../../../integrations/lifi/constants';
+import '../../../../configs/lifi';
+import { CHAINS, TOKENS } from '../../../../configs/constants';
 
 export async function GET(req: NextRequest) {
   try {

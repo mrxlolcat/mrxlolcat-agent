@@ -1,6 +1,6 @@
 import { getRoutes, executeRoute } from '@lifi/sdk';
-import { lifiConfig } from './config';
-import { CHAINS, TOKENS } from './constants';
+import { lifiConfig } from '../../configs/lifi';
+import { CHAINS, TOKENS } from '../../configs/constants';
 
 export interface BridgeParams {
   fid: string;

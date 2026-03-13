@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
-import { LifiWidgetEmbed } from "../integrations/lifi/widget";
+import { LifiWidgetEmbed } from "./Bridge/LifiWidget";
 
 interface SwapProps { onBack: () => void; }
 

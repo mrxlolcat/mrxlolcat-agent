@@ -1,7 +1,7 @@
 "use client";
 
 import { LiFiWidget } from '@lifi/widget';
-import { FEE_BPS, DEFAULT_FEE_WALLET, CHAINS } from './constants';
+import { FEE_BPS, DEFAULT_FEE_WALLET, CHAINS } from '../../configs/constants';
 
 export function LifiWidgetEmbed() {
   const widgetConfig = {

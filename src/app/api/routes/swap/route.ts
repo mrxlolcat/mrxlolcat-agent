@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRoutes } from '@lifi/sdk';
-import '../../../../integrations/lifi/config'; // Pastikan config global di-load
-import { CHAINS, TOKENS } from '../../../../integrations/lifi/constants';
+import '../../../../configs/lifi'; // Pastikan config global di-load
+import { CHAINS, TOKENS } from '../../../../configs/constants';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

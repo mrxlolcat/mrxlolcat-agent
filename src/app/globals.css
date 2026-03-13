@@ -10,8 +10,7 @@ html, body {
   background: #000000;
   color: #FAFAFA;
   overflow-x: hidden;
-  max-width: 424px;
-  margin: 0 auto;
+  margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
@@ -19,8 +18,7 @@ html, body {
 
 @media (min-width: 425px) {
   html, body {
-    border-left: 1px solid #1A1A1A;
-    border-right: 1px solid #1A1A1A;
+    /* Subtle side borders removed for full-width responsive feel */
   }
 }
 

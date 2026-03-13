@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
-import { getSystemPrompt, getModel, localResponse } from "../../../agents/cat-brain";
-import { getHistory, saveMessage } from "../../../agents/memory";
+import { getSystemPrompt } from "../../../agent/core/brain";
+import { getModel, localResponse } from "../../../agent/reasoning/provider";
+import { getHistory, saveMessage } from "../../../agent/memory/manager";
 
 export async function POST(req: NextRequest) {
   try {

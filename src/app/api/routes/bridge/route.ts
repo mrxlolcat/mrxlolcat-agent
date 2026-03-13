@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { catBridge } from '../../../../integrations/lifi/sdk';
+import { catBridge } from '../../../../agent/tools/lifi';
 
 export async function POST(req: NextRequest) {
   try {
