@@ -15,3 +15,4 @@ This directory contains the modular skills used by the MRX LOLCAT agent.
 - [bridge-skill](./bridge-skill/SKILL.md): Cross-chain asset transfers.
 - [monitor-skill](./monitor-skill/SKILL.md): Real-time wallet tracking.
 - [social-skill](./social-skill/SKILL.md): Farcaster interactions.
+- [agentcash-skill](./agentcash-skill/SKILL.md): Micropayments and premium APIs.
