@@ -23,11 +23,29 @@ const miniAppEmbed = {
 };
 
 export const metadata: Metadata = {
-  title: "mrxlolcat-agent",
-  description: "AI agent with token swap, launchpad, social feed, and DeFi lending — built on Farcaster.",
+  title: "MRX LOLCAT Agent | On-Chain AI Automation",
+  description: "Automate on-chain tasks using AI agents. Fast automation, AI-powered decision making, and secure wallet integration on Farcaster.",
+  keywords: ["AI Agent", "Farcaster", "Crypto Automation", "Base", "On-chain", "MRX LOLCAT"],
   openGraph: {
-    title: "mrxlolcat-agent",
-    description: "AI agent with token swap, launchpad, social feed, and DeFi lending.",
+    title: "MRX LOLCAT Agent | On-Chain AI Automation",
+    description: "Automate on-chain tasks using AI agents. Secure, fast, and verified on Farcaster.",
+    url: appUrl,
+    siteName: "MRX LOLCAT Agent",
+    images: [
+      {
+        url: `${appUrl}/og.png`,
+        width: 1200,
+        height: 630,
+        alt: "MRX LOLCAT Agent Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MRX LOLCAT Agent | On-Chain AI Automation",
+    description: "Automate on-chain tasks using AI agents. Secure and fast on Farcaster.",
     images: [`${appUrl}/og.png`],
   },
   other: {

@@ -232,8 +232,26 @@ export default function Chat({ context, onBack }: ChatProps) {
         <div ref={endRef} />
       </main>
 
-      {/* Input */}
-      <footer className="p-4 glass border-t border-warden-border">
+      {/* Input Area */}
+      <footer className="p-4 glass border-t border-warden-border shrink-0">
+        {/* Quick Actions / Example Tasks */}
+        <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-1">
+          {[
+            "swap 10 usdc to eth",
+            "monitor my wallet",
+            "bridge base -> op",
+            "alert eth > $3k",
+          ].map(task => (
+            <button
+              key={task}
+              onClick={() => setInput(task)}
+              className="chip chip-inactive whitespace-nowrap lowercase font-mono bg-zinc-900/50 hover:bg-warden-accent/10 hover:border-warden-accent/30 transition-all text-[9px]"
+            >
+              {task}
+            </button>
+          ))}
+        </div>
+
         <div className="flex gap-2 max-w-sm mx-auto">
           <input
             ref={inputRef}
