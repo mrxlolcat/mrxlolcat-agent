@@ -1,16 +1,15 @@
 {
   "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
   "name": "MRX LOLCAT Agent",
-  "description": "The master identity for MRX LOLCAT. A professional AI automation terminal for cross-chain liquidity, real-time monitoring, and Farcaster social management.",
+  "description": "High-performance AI automation terminal for the Farcaster Agentic Economy. Specializes in cross-chain bridging via LI.FI, real-time wallet monitoring, and social hub management.",
   "image": "https://mrxlolcat-agent.vercel.app/logo.jpg",
   "active": true,
-  "updatedAt": 1773425400,
+  "updatedAt": 1741910400,
   "supportedTrust": [
     "reputation"
   ],
   "registrations": [
-    "eip155:8453:0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-    "eip155:8453/erc721:0x8004800480048004800480048004800480048004/29488"
+    "eip155:8453:0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
   ],
   "services": [
     {
@@ -34,12 +33,12 @@
     {
       "type": "oasf",
       "domains": [
-        "technology/blockchain",
-        "finance/defi"
+        "technology",
+        "finance"
       ],
       "skills": [
-        "operational_skills/finance/liquidity_management",
-        "analytical_skills/data_analysis/blockchain_analysis"
+        "liquidity_management",
+        "blockchain_analysis"
       ]
     },
     {
