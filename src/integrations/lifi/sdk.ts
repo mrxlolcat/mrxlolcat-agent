@@ -1,10 +1,5 @@
-import { createConfig, getRoutes } from '@lifi/sdk';
-
-// Initialize LI.FI SDK globally
-createConfig({
-  integrator: 'mrxlolcat-agent',
-  apiUrl: 'https://li.fi/api/v1'
-});
+import { getRoutes, executeRoute } from '@lifi/sdk';
+import './config'; // Ensures global config is loaded
 
 export interface BridgeParams {
   fromChain: number;
@@ -21,24 +16,26 @@ export async function getBestRoute({
   toToken, 
   amount
 }: BridgeParams) {
-  const options = {
-    fee: 0.01, // 1% fee for the fee wallet
-    feeRecipient: '0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5',
-  };
-
+  // We no longer need to pass options manually because they are set in the global config!
   const routesResponse = await getRoutes({
     fromChainId: fromChain,
     toChainId: toChain,
     fromTokenAddress: fromToken,
     toTokenAddress: toToken,
     fromAmount: amount,
-    options,
   });
   
-  if (routesResponse.routes.length === 0) {
+  if (!routesResponse.routes || routesResponse.routes.length === 0) {
     throw new Error('No valid routes found');
   }
 
-  // Best route otomatis ditaruh di index 0 oleh LI.FI
+  // Best route automatically placed at index 0 by LI.FI API
   return routesResponse.routes[0];
+}
+
+// Additional helper for direct execution (e.g., inside an API or Node context)
+export async function executeBestRoute(route: any) {
+  // Execute the route (this usually requires a signer/wallet to be passed in real scenarios)
+  // This is a placeholder for the agent's logic.
+  return await executeRoute(route);
 }
