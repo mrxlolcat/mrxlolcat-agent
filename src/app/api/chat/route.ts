@@ -9,24 +9,39 @@ export async function POST(req: NextRequest) {
 
     let chatHistory: any[] = [];
     
-    // Gunakan Memory Manager (Pinecone) untuk mengambil histori chat per FID
+    // Gunakan Memory Manager (Pinecone) dengan penanganan error yang kuat
     if (fid) {
-      chatHistory = await getHistory(fid);
-      await saveMessage(fid, "user", lastMessage, walletAddress);
+      try {
+        chatHistory = await getHistory(fid);
+        // Simpan pesan baru di background agar tidak menghambat streaming
+        saveMessage(fid, "user", lastMessage, walletAddress).catch(e => console.error("Memory Save Error:", e));
+      } catch (memError) {
+        console.error("Memory Retrieve Error (skipping):", memError);
+      }
     }
 
     const model = await getModel(modelId);
     if (model) {
       const { streamText } = await import("ai");
       
-      const fullMessages = chatHistory.length > 0 ? [...chatHistory, ...messages.slice(-1)] : messages;
+      // Gabungkan context: Histori lama + hanya pesan TERAKHIR dari session saat ini 
+      // (karena histori Pinecone sudah mencakup pesan-pesan sebelumnya)
+      const finalMessages = chatHistory.length > 0 
+        ? [...chatHistory, messages[messages.length - 1]] 
+        : messages;
 
       const result = streamText({
         model,
         system: getSystemPrompt(channel, walletAddress),
-        messages: fullMessages,
+        messages: finalMessages,
         maxTokens: 500,
         temperature: 0.9,
+        // Simpan balasan asisten ke memori setelah stream selesai
+        onFinish: async ({ text }) => {
+          if (fid) {
+            saveMessage(fid, "assistant", text, walletAddress).catch(e => console.error("Memory Assistant Save Error:", e));
+          }
+        }
       });
       
       return result.toDataStreamResponse();
