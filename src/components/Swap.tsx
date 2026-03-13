@@ -12,16 +12,21 @@ export default function Swap({ onBack }: SwapProps) {
   // Jika dompet belum terhubung, tampilkan opsi connect wallet
   if (!isConnected) {
     return (
-      <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ background: "#09090B" }}>
-        <nav className="glass sticky top-0 z-50 flex items-center gap-3 px-4 py-3 border-b border-zinc-800/60">
+      <div className="min-h-screen min-h-[100dvh] flex flex-col bg-black">
+        <nav className="glass sticky top-0 z-50 flex items-center gap-3 px-4 py-3 border-b border-warden-border">
           <button onClick={onBack} className="text-zinc-500 hover:text-white transition text-sm">←</button>
-          <h1 className="font-semibold text-sm flex-1">🌉 Bridge Assets</h1>
+          <h1 className="font-bold text-[11px] uppercase tracking-widest flex-1">Protocol<span className="text-warden-accent">Bridge</span></h1>
         </nav>
         <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
-          <div className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mb-6" style={{ background: "rgba(99, 102, 241, 0.1)" }}>🤠</div>
-          <h2 className="font-bold text-xl mb-2">Connect Your Wallet</h2>
-          <p className="text-sm text-zinc-400 mb-6 max-w-[260px]">Connect your wallet to bridge tokens across 60+ chains using LI.FI.</p>
-          <button onClick={() => open()} className="btn-primary px-8 py-3 text-sm">Connect Wallet</button>
+          <div className="relative mb-8">
+            <div className="absolute inset-0 bg-warden-accent/20 blur-3xl rounded-full" />
+            <div className="relative w-24 h-24 rounded-full border border-warden-accent/30 flex items-center justify-center text-5xl bg-black/50 backdrop-blur-xl">
+              🤠
+            </div>
+          </div>
+          <h2 className="font-black text-xl mb-3 tracking-tighter uppercase">Initialize Key</h2>
+          <p className="text-[11px] text-zinc-500 mb-8 max-w-[240px] font-medium leading-relaxed uppercase tracking-wider">Authentication required to access omnichain liquidity modules.</p>
+          <button onClick={() => open()} className="btn-primary px-10 py-4 text-[11px] w-full max-w-[240px]">Connect Access Key</button>
         </div>
       </div>
     );
@@ -29,24 +34,27 @@ export default function Swap({ onBack }: SwapProps) {
 
   // Jika terhubung, tampilkan UI LI.FI Widget yang sangat canggih
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ background: "#09090B" }}>
+    <div className="min-h-screen min-h-[100dvh] flex flex-col bg-black">
       {/* Header */}
-      <nav className="glass sticky top-0 z-50 flex items-center gap-3 px-4 py-3 border-b border-zinc-800/60">
+      <nav className="glass sticky top-0 z-50 flex items-center gap-3 px-4 py-3 border-b border-warden-border">
         <button onClick={onBack} className="text-zinc-500 hover:text-white transition text-sm">←</button>
         <div className="flex-1">
-          <h1 className="font-semibold text-sm">🌉 Bridge Assets</h1>
-          <p className="text-[10px] text-zinc-500">Powered by LI.FI Smart Routing</p>
+          <h1 className="font-bold text-[11px] uppercase tracking-widest">Protocol<span className="text-warden-accent">Bridge</span></h1>
+          <p className="text-[9px] font-mono text-zinc-500 uppercase tracking-tighter">OMNICHAIN LIQUIDITY ROUTER ACTIVE</p>
         </div>
-        <button onClick={() => open()} className="flex items-center gap-1 text-[10px] px-2 py-1 rounded-lg font-medium"
-          style={{ background: "rgba(34,197,94,0.08)", color: "#4ADE80", border: "1px solid rgba(34,197,94,0.15)" }}>
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+        <button onClick={() => open()} className="flex items-center gap-2 text-[10px] px-2 py-1.5 rounded-md font-bold transition-all border border-warden-border"
+          style={{ background: "rgba(0, 240, 255, 0.05)", color: "#00F0FF" }}>
+          <span className="w-1 h-1 rounded-full bg-warden-accent" />
           {address?.slice(0, 4)}…{address?.slice(-3)}
         </button>
       </nav>
 
       {/* Widget Container */}
-      <div className="flex-1 overflow-y-auto px-2 py-4">
-        <LifiWidgetEmbed />
+      <div className="flex-1 overflow-y-auto px-2 py-6 flex flex-col items-center">
+        <div className="w-full max-w-md animate-fade-in">
+           <LifiWidgetEmbed />
+        </div>
+        <p className="text-[9px] text-zinc-700 font-mono mt-8 uppercase tracking-[0.3em]">Securely routed via LI.FI Protocol</p>
       </div>
     </div>
   );

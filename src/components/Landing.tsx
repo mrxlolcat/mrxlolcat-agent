@@ -7,9 +7,9 @@ import Link from "next/link";
 interface LandingProps { onNavigate: (view: View) => void; }
 
 const features = [
-  { emoji: "🤖", title: "AI Agent", desc: "Multi-model streaming chat with long-term memory", view: "chat" as View, color: "#818CF8" },
-  { emoji: "🌉", title: "Bridge", desc: "Swap & bridge tokens across 60+ chains instantly", view: "bridge" as View, color: "#34D399", locked: true },
-  { emoji: "💬", title: "Social", desc: "Real-time AI agent social feed & discovery", view: "social" as View, color: "#60A5FA" },
+  { emoji: "🤖", title: "AI Agent", desc: "Natural language interactions with long-term memory", view: "chat" as View, color: "#00F0FF" },
+  { emoji: "🌉", title: "Bridge", desc: "Omnichain asset transfers via LI.FI Smart Routing", view: "bridge" as View, color: "#00F0FF", locked: true },
+  { emoji: "💬", title: "Social", desc: "Real-time agent social feed & network discovery", view: "social" as View, color: "#00F0FF" },
 ];
 
 export default function Landing({ onNavigate }: LandingProps) {
@@ -22,133 +22,125 @@ export default function Landing({ onNavigate }: LandingProps) {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ background: "#09090B" }}>
+    <div className="min-h-screen min-h-[100dvh] flex flex-col bg-black selection:bg-warden-accent/30">
       {/* Nav */}
-      <nav className="glass sticky top-0 z-50 border-b border-zinc-800/60 px-4 py-3">
+      <nav className="glass sticky top-0 z-50 border-b border-warden-border px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-lg">🐱</span>
-            <span className="font-bold text-sm gradient-text">mrxlolcat</span>
+            <span className="text-xl">🤠</span>
+            <span className="font-bold text-sm tracking-tight text-white uppercase">Warden<span className="text-warden-accent">Cat</span></span>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/analytics" className="text-[11px] text-zinc-400 hover:text-white transition">
-              📊 Analytics
+          <div className="flex items-center gap-4">
+            <Link href="/analytics" className="text-[10px] font-bold text-zinc-500 hover:text-warden-accent transition-colors uppercase tracking-widest">
+              Analytics
             </Link>
             <button
               onClick={() => open()}
-              className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg font-medium transition-all"
+              className="flex items-center gap-2 text-[10px] px-3 py-1.5 rounded-md font-bold transition-all border border-warden-border hover:border-warden-accent/50"
               style={isConnected ? {
-                background: "rgba(34, 197, 94, 0.1)",
-                border: "1px solid rgba(34, 197, 94, 0.2)",
-                color: "#4ADE80",
+                background: "rgba(0, 240, 255, 0.05)",
+                color: "#00F0FF",
               } : {
-                background: "linear-gradient(135deg, #6366F1, #8B5CF6)",
-                color: "white",
+                background: "#00F0FF",
+                color: "black",
               }}
             >
               {isConnected ? (
                 <>
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-ring" />
+                  <span className="w-1 h-1 rounded-full bg-warden-accent animate-pulse" />
                   {address?.slice(0, 6)}...{address?.slice(-4)}
                 </>
-              ) : "Connect Wallet"}
+              ) : "Initialize"}
             </button>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="px-5 pt-10 pb-8 text-center">
-        <div className="relative inline-block mb-5">
-          <div className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl" style={{ background: "linear-gradient(135deg, #312E81, #4C1D95)" }}>🤠</div>
-          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-green-500 flex items-center justify-center text-[10px] border-2 border-[#09090B]">✓</div>
+      <section className="px-6 pt-12 pb-10 text-center flex flex-col items-center">
+        <div className="relative mb-8 group">
+          <div className="absolute inset-0 bg-warden-accent/20 blur-3xl rounded-full transition-opacity group-hover:bg-warden-accent/30" />
+          <div className="relative w-24 h-24 rounded-full border border-warden-accent/30 flex items-center justify-center text-5xl bg-black/50 backdrop-blur-xl">
+            🤠
+          </div>
+          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-warden-accent flex items-center justify-center text-[12px] border-4 border-black text-black font-bold animate-fade-in">
+            ✓
+          </div>
         </div>
-        <h1 className="text-2xl font-extrabold mb-2 shimmer">mrxlolcat-agent</h1>
-        <p className="text-[13px] text-zinc-400 leading-relaxed max-w-[300px] mx-auto">
-          The ultimate LI.FI powered super agent on Farcaster.
-          <br />Bridge across 60+ chains with ease.
+        
+        <h1 className="text-3xl font-black mb-3 tracking-tighter text-white uppercase">
+          Agentic <span className="gradient-text">Economy</span>
+        </h1>
+        <p className="text-[12px] text-zinc-500 leading-relaxed max-w-[280px] font-medium uppercase tracking-wide">
+          The high-tech interface for cross-chain liquidity and AI intelligence on Farcaster.
         </p>
 
-        {/* Stats */}
-        <div className="flex justify-center gap-8 mt-6 mb-2">
+        {/* Technical Stats */}
+        <div className="grid grid-cols-3 gap-1 mt-10 w-full border-y border-warden-border py-6">
           {[
             { v: "60+", l: "Chains" },
-            { v: "LI.FI", l: "Smart Engine" },
             { v: "0.1%", l: "Fee" },
+            { v: "SPEx", l: "Verified" },
           ].map(s => (
-            <div key={s.l}>
-              <p className="text-lg font-extrabold gradient-text">{s.v}</p>
-              <p className="text-[10px] text-zinc-500 font-medium">{s.l}</p>
+            <div key={s.l} className="text-center px-2">
+              <p className="text-xs font-mono font-bold text-warden-accent">{s.v}</p>
+              <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-tighter mt-1">{s.l}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Wallet CTA (if not connected) */}
-      {!isConnected && (
-        <section className="px-5 pb-5">
-          <button onClick={() => open()} className="w-full btn-primary py-3.5 text-sm flex items-center justify-center gap-2">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 110-6h.75A2.25 2.25 0 0118 6v0a2.25 2.25 0 012.25 2.25M21 12v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18V6a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 6v6z" />
-            </svg>
-            Connect Wallet to Start Bridging
-          </button>
-        </section>
-      )}
+      {/* Primary Action */}
+      <section className="px-6 pb-6">
+        <button 
+          onClick={isConnected ? () => onNavigate("bridge") : () => open()} 
+          className="w-full btn-primary py-4 text-xs shadow-[0_0_30px_rgba(0,240,255,0.1)]"
+        >
+          {isConnected ? "Execute Cross-Chain Bridge" : "Connect Access Key"}
+        </button>
+      </section>
 
-      {/* Features grid */}
-      <section className="px-4 pb-5 flex-1 max-w-sm mx-auto w-full">
-        <div className="grid grid-cols-1 gap-2.5">
+      {/* Feature Grid */}
+      <section className="px-6 pb-10 flex-1 w-full max-w-sm mx-auto">
+        <div className="space-y-3">
+          <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em] mb-4 text-center">Available Modules</p>
           {features.map(f => {
             const needsWallet = f.locked && !isConnected;
             return (
               <button
                 key={f.title}
                 onClick={() => handleNavigate(f.view, f.locked)}
-                className="card p-4 text-left group relative overflow-hidden flex items-center gap-4"
+                className="card w-full p-5 text-left group flex items-center gap-5 hover:bg-warden-accent/[0.02]"
               >
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0 transition-transform group-hover:scale-110"
-                  style={{ background: `${f.color}15` }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0 border border-warden-border group-hover:border-warden-accent/30 transition-colors bg-zinc-900/30">
                   {f.emoji}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-[14px] text-white mb-0.5">{f.title}</h3>
-                  <p className="text-[11px] text-zinc-500 leading-relaxed">{f.desc}</p>
-                </div>
-                {needsWallet ? (
-                  <div className="text-zinc-600">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                    </svg>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <h3 className="font-bold text-[12px] text-white uppercase tracking-tight">{f.title}</h3>
+                    {f.locked && <span className="text-[8px] px-1.5 py-0.5 rounded-sm bg-zinc-900 text-zinc-500 border border-zinc-800 uppercase font-black tracking-widest">Locked</span>}
                   </div>
-                ) : (
-                  <div className="text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">→</div>
-                )}
+                  <p className="text-[10px] text-zinc-500 font-medium leading-normal">{f.desc}</p>
+                </div>
+                <div className="text-warden-accent opacity-0 group-hover:opacity-100 transition-opacity font-mono text-xs">
+                  {">"}
+                </div>
               </button>
             );
           })}
         </div>
       </section>
 
-      {/* Connected state: Quick actions */}
-      {isConnected && (
-        <section className="px-5 pb-4">
-          <button
-            onClick={() => onNavigate("bridge")}
-            className="w-full btn-primary py-3.5 text-sm flex items-center justify-center gap-2"
-          >
-            🔄 Open LI.FI Bridge
-          </button>
-        </section>
-      )}
-
       {/* Footer */}
-      <footer className="px-5 pb-5 pt-2">
-        <div className="flex items-center justify-between text-[10px] text-zinc-600">
-          <span>mrxlolcat-agent · Farcaster Mini App</span>
-          <div className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-            <span>Online</span>
+      <footer className="px-6 pb-8 border-t border-warden-border pt-6">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">Protocol Version</span>
+            <span className="text-[10px] font-mono text-zinc-500">v3.0.0-PROD</span>
+          </div>
+          <div className="flex items-center gap-2 bg-zinc-900/50 px-3 py-1.5 rounded-md border border-zinc-800">
+            <span className="w-1.5 h-1.5 rounded-full bg-warden-accent pulse-ring" />
+            <span className="text-[9px] font-bold text-warden-accent uppercase">Mainnet Ready</span>
           </div>
         </div>
       </footer>

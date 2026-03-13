@@ -18,12 +18,12 @@ interface ChatProps {
 
 function TypingDots() {
   return (
-    <div className="flex items-end gap-2 animate-fade-in">
-      <div className="w-6 h-6 rounded-xl flex items-center justify-center text-[10px] shrink-0" style={{ background: "linear-gradient(135deg, #6366F1, #A78BFA)" }}>🐱</div>
-      <div className="bg-zinc-800/60 rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1.5 border border-zinc-700/40">
-        <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full typing-dot" />
-        <span className="w-1.5 h-1.5 bg-purple-400 rounded-full typing-dot" />
-        <span className="w-1.5 h-1.5 bg-violet-400 rounded-full typing-dot" />
+    <div className="flex items-start gap-3 animate-fade-in">
+      <div className="w-6 h-6 rounded-full border border-warden-accent/20 flex items-center justify-center text-[10px] bg-black shrink-0 mt-1">🤠</div>
+      <div className="bg-zinc-900/40 rounded-xl rounded-tl-none px-4 py-3 flex gap-1.5 border border-warden-border">
+        <span className="w-1.5 h-1.5 bg-warden-accent rounded-full typing-dot" />
+        <span className="w-1.5 h-1.5 bg-warden-accent rounded-full typing-dot opacity-60" />
+        <span className="w-1.5 h-1.5 bg-warden-accent rounded-full typing-dot opacity-30" />
       </div>
     </div>
   );
@@ -44,7 +44,7 @@ export default function Chat({ context, onBack }: ChatProps) {
       {
         id: "welcome",
         role: "assistant" as const,
-        content: `hey ${user}! 🐱✨ i'm mrxlolcat-agent, your AI cat agent on farcaster.\n\nask me anything — crypto, swap, launch tokens, or cat philosophy 😼`,
+        content: `system initialized. 🔋\n\nwelcome, ${user}. 🤠 how can i assist your cross-chain operations today?`,
       },
     ];
   });
@@ -77,7 +77,7 @@ export default function Chat({ context, onBack }: ChatProps) {
       {
         id: "welcome-" + Date.now(),
         role: "assistant",
-        content: `memory cleared! 🧹 fresh start.\n\nhey ${user}! 🐱✨ what's up?`,
+        content: `memory cleared. 🧹 fresh secure state established.\n\nhow can i help, ${user}? 🤠`,
       },
     ]);
   };
@@ -148,12 +148,12 @@ export default function Chat({ context, onBack }: ChatProps) {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { id: (Date.now() + 1).toString(), role: "assistant", content: "oops, cat brain crashed 😿 try again!" },
+        { id: (Date.now() + 1).toString(), role: "assistant", content: "protocol error. ⚠️ connection interrupted." },
       ]);
       setLoading(false);
       setStreaming(false);
     }
-  }, [input, loading, messages]);
+  }, [input, loading, messages, address, selectedModel, context]);
 
   const playTTS = async (text: string) => {
     try {
@@ -172,61 +172,57 @@ export default function Chat({ context, onBack }: ChatProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen h-[100dvh] max-h-screen" style={{ background: "#09090B" }}>
+    <div className="flex flex-col h-screen h-[100dvh] max-h-screen bg-black">
       {/* Header */}
-      <header className="glass sticky top-0 z-50 flex items-center gap-3 px-4 py-3 border-b border-zinc-800/60 shrink-0">
+      <header className="glass sticky top-0 z-50 flex items-center gap-3 px-4 py-3 border-b border-warden-border shrink-0">
         {onBack && (
           <button onClick={onBack} className="text-zinc-500 hover:text-white transition text-sm">←</button>
         )}
-        <div className="w-9 h-9 rounded-2xl flex items-center justify-center text-lg" style={{ background: "linear-gradient(135deg, #6366F1, #A78BFA)" }}>
-          🐱
+        <div className="w-9 h-9 rounded-full flex items-center justify-center text-lg border border-warden-accent/30 bg-black">
+          🤠
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="font-bold text-sm gradient-text">mrxlolcat-agent</h1>
-          <p className="text-[10px] text-zinc-500 truncate">
-            {loading ? "typing…" : streaming ? "streaming…" : `ai agent · ${messages.length} msgs`}
+          <h1 className="font-bold text-[11px] uppercase tracking-widest text-white">Agent<span className="text-warden-accent">Core</span></h1>
+          <p className="text-[9px] font-mono text-zinc-500 uppercase">
+            {loading ? "processing…" : streaming ? "streaming…" : `active · v3.0`}
           </p>
         </div>
         
         <select
           value={selectedModel}
           onChange={(e) => setSelectedModel(e.target.value)}
-          className="bg-zinc-900 border border-zinc-700 text-zinc-300 text-[10px] rounded-lg px-2 py-1 outline-none focus:border-indigo-500 transition-colors"
+          className="bg-black border border-warden-border text-zinc-400 text-[9px] font-bold uppercase rounded-md px-2 py-1 outline-none focus:border-warden-accent transition-colors"
         >
-          <option value="gpt-4o-mini">GPT-4o Mini</option>
-          <option value="openrouter/anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gpt-4o-mini">GPT-4o</option>
+          <option value="openrouter/anthropic/claude-3.5-sonnet">Claude 3.5</option>
+          <option value="gemini-2.0-flash">Gemini 2.0</option>
         </select>
 
         <button onClick={handleClear} className="text-[10px] text-zinc-600 hover:text-red-400 transition px-1.5 py-1" title="Clear">🗑️</button>
-        <div className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-ring" />
+        <div className="w-1.5 h-1.5 rounded-full bg-warden-accent pulse-ring" />
       </header>
 
       {/* Messages */}
-      <main className="flex-1 overflow-y-auto px-3 py-4 space-y-2.5">
+      <main className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`animate-fade-in flex items-end gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
+            className={`animate-fade-in flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
           >
             {msg.role === "assistant" && (
-              <div className="flex flex-col items-center gap-1 shrink-0">
-                <div className="w-6 h-6 rounded-xl flex items-center justify-center text-[10px]" style={{ background: "linear-gradient(135deg, #6366F1, #A78BFA)" }}>🐱</div>
+              <div className="flex flex-col items-center gap-2 shrink-0 mt-1">
+                <div className="w-6 h-6 rounded-full border border-warden-accent/20 flex items-center justify-center text-[10px] bg-black">🤠</div>
                 {!streaming && msg.content && (
-                  <button onClick={() => playTTS(msg.content)} className="text-[10px] text-zinc-500 hover:text-indigo-400" title="Play Voice">🔊</button>
+                  <button onClick={() => playTTS(msg.content)} className="text-[10px] text-zinc-600 hover:text-warden-accent" title="Play Voice">🔊</button>
                 )}
               </div>
             )}
-            {msg.role === "user" && pfp && (
-              <img src={pfp} alt="" className="w-7 h-7 rounded-full shrink-0 object-cover" />
-            )}
             <div
-              className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed whitespace-pre-wrap ${
+              className={`max-w-[85%] rounded-xl px-4 py-3 text-[13px] leading-relaxed whitespace-pre-wrap ${
                 msg.role === "user"
-                  ? "text-white rounded-br-sm"
-                  : "bg-zinc-800/60 text-zinc-200 rounded-bl-sm border border-zinc-700/40"
+                  ? "bg-warden-accent text-black font-bold rounded-tr-none shadow-[0_0_20px_rgba(0,240,255,0.1)]"
+                  : "bg-zinc-900/40 text-zinc-200 border border-warden-border rounded-tl-none font-medium"
               }`}
-              style={msg.role === "user" ? { background: "linear-gradient(135deg, #6366F1, #8B5CF6)" } : undefined}
             >
               {msg.content}
             </div>
@@ -237,23 +233,24 @@ export default function Chat({ context, onBack }: ChatProps) {
       </main>
 
       {/* Input */}
-      <footer className="glass px-3 py-3 border-t border-zinc-800/60 shrink-0">
-        <div className="flex gap-2">
+      <footer className="p-4 glass border-t border-warden-border">
+        <div className="flex gap-2 max-w-sm mx-auto">
           <input
             ref={inputRef}
+            type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
-            placeholder="type a message…"
+            placeholder="TYPE COMMAND..."
             disabled={loading}
-            className="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-[13px] text-white placeholder-zinc-600 transition disabled:opacity-40"
+            className="flex-1 bg-black border border-warden-border rounded-lg px-4 py-3 text-[13px] text-white focus:border-warden-accent transition-all placeholder:text-zinc-800 font-mono uppercase tracking-wider"
           />
           <button
             onClick={send}
             disabled={loading || !input.trim()}
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white disabled:opacity-20 transition active:scale-90 btn-primary"
+            className="w-12 h-12 rounded-lg bg-warden-accent text-black flex items-center justify-center disabled:opacity-20 transition-all hover:shadow-[0_0_15px_rgba(0,240,255,0.3)] active:scale-95"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
               <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
             </svg>
           </button>

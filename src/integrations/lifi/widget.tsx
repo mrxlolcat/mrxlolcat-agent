@@ -9,15 +9,20 @@ export function LifiWidgetEmbed() {
     fromChain: CHAINS.BASE,
     theme: {
       palette: {
-        primary: { main: '#6366f1' },
-        secondary: { main: '#a855f7' },
-        background: { paper: '#18181b', default: '#09090b' },
-        text: { primary: '#ffffff', secondary: '#a1a1aa' },
+        primary: { main: '#00F0FF' },
+        secondary: { main: '#175DDC' },
+        background: { paper: '#0A0A0A', default: '#000000' },
+        text: { primary: '#ffffff', secondary: '#888888' },
+      },
+      shape: {
+        borderRadius: 12,
+        borderRadiusSecondary: 8,
       },
       typography: {
-        fontFamily: 'inherit',
+        fontFamily: 'Inter, system-ui, sans-serif',
       },
     },
+    appearance: 'dark',
     // Fees in the widget are properly handled via sdkConfig in newer versions
     sdkConfig: {
       routeOptions: {

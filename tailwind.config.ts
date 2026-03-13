@@ -7,6 +7,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        warden: {
+          bg: "#000000",
+          surface: "#0A0A0A",
+          border: "#1A1A1A",
+          accent: "#00F0FF",
+          muted: "#888888",
+        },
         cat: {
           purple: "#8B5CF6",
           pink: "#EC4899",
