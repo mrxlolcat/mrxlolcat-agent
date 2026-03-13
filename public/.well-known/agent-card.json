@@ -1,18 +1,5 @@
 {
   "name": "MRX LOLCAT Agent",
   "description": "Standard discovery card for MRX LOLCAT A2A interactions.",
-  "skills": [
-    {
-      "name": "bridge",
-      "description": "Execute cross-chain asset transfers using LI.FI protocol."
-    },
-    {
-      "name": "monitor",
-      "description": "Real-time on-chain monitoring and wallet tracking."
-    },
-    {
-      "name": "social",
-      "description": "Manage Farcaster social interactions and casting."
-    }
-  ]
+  "capabilities": ["bridge", "monitor", "social"]
 }

@@ -1,12 +1,15 @@
 {
   "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
   "name": "MRX LOLCAT Agent",
-  "description": "High-performance AI automation terminal for the Farcaster Agentic Economy. Specializes in cross-chain bridging via LI.FI, real-time wallet monitoring, and social hub management.",
+  "description": "The master identity for MRX LOLCAT. A professional AI automation terminal for cross-chain liquidity, real-time monitoring, and Farcaster social management.",
   "image": "https://mrxlolcat-agent.vercel.app/logo.jpg",
   "active": true,
-  "updatedAt": 1773424200,
-  "supportedTrust": ["reputation"],
+  "updatedAt": 1773425400,
+  "supportedTrust": [
+    "reputation"
+  ],
   "registrations": [
+    "eip155:8453:0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
     "eip155:8453/erc721:0x8004800480048004800480048004800480048004/29488"
   ],
   "services": [
@@ -26,12 +29,14 @@
     },
     {
       "type": "a2a",
-      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json",
-      "a2aSkills": ["bridge", "monitor", "social"]
+      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json"
     },
     {
       "type": "oasf",
-      "domains": ["technology/blockchain", "finance/defi"],
+      "domains": [
+        "technology/blockchain",
+        "finance/defi"
+      ],
       "skills": [
         "operational_skills/finance/liquidity_management",
         "analytical_skills/data_analysis/blockchain_analysis"
@@ -42,38 +47,10 @@
       "address": "eip155:8453:0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5"
     }
   ],
-  "endpoints": [
-    {
-      "type": "mcp",
-      "url": "https://mrxlolcat-agent.vercel.app/api/mcp",
-      "mcpTools": [
-        {
-          "name": "bridge_assets",
-          "description": "Execute cross-chain asset transfers using LI.FI protocol."
-        },
-        {
-          "name": "publish_cast",
-          "description": "Manage Farcaster social interactions and casting."
-        }
-      ]
-    },
-    {
-      "type": "a2a",
-      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json",
-      "a2aSkills": ["bridge", "monitor", "social"]
-    },
-    {
-      "type": "oasf",
-      "domains": ["technology/blockchain", "finance/defi"],
-      "skills": [
-        "operational_skills/finance/liquidity_management",
-        "analytical_skills/data_analysis/blockchain_analysis"
-      ]
-    }
-  ],
   "metadata": {
     "version": "3.0.0",
     "author": "MRX LOLCAT",
-    "farcasterId": "mrxlolcat"
+    "farcasterId": "mrxlolcat",
+    "nftId": "29488"
   }
 }
