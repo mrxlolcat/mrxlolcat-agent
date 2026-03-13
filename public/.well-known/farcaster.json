@@ -1,7 +1,7 @@
 {
   "name": "MRX LOLCAT Agent",
   "version": "3.0.0",
-  "accountAssociation": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  "accountAssociation": "0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5",
   "wallets": ["base", "op-mainnet"],
   "features": ["frames", "miniapps", "tipjar"]
 }
