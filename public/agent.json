@@ -4,7 +4,7 @@
   "description": "High-performance AI automation terminal for the Farcaster Agentic Economy. Specializes in cross-chain bridging via LI.FI, real-time wallet monitoring, and social hub management.",
   "image": "https://mrxlolcat-agent.vercel.app/logo.jpg",
   "active": true,
-  "updatedAt": 1773423600,
+  "updatedAt": 1773424200,
   "supportedTrust": ["reputation"],
   "registrations": [
     "eip155:8453/erc721:0x8004800480048004800480048004800480048004/29488"
@@ -26,14 +26,15 @@
     },
     {
       "type": "a2a",
-      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json"
+      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json",
+      "a2aSkills": ["bridge", "monitor", "social"]
     },
     {
       "type": "oasf",
       "domains": ["technology/blockchain", "finance/defi"],
       "skills": [
-        "analytical_skills/data_analysis/blockchain_analysis",
-        "operational_skills/finance/liquidity_management"
+        "operational_skills/finance/liquidity_management",
+        "analytical_skills/data_analysis/blockchain_analysis"
       ]
     },
     {
@@ -58,14 +59,15 @@
     },
     {
       "type": "a2a",
-      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json"
+      "url": "https://mrxlolcat-agent.vercel.app/.well-known/agent-card.json",
+      "a2aSkills": ["bridge", "monitor", "social"]
     },
     {
       "type": "oasf",
       "domains": ["technology/blockchain", "finance/defi"],
       "skills": [
-        "analytical_skills/data_analysis/blockchain_analysis",
-        "operational_skills/finance/liquidity_management"
+        "operational_skills/finance/liquidity_management",
+        "analytical_skills/data_analysis/blockchain_analysis"
       ]
     }
   ],
