@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: "/Users/rhmnhsim/mrxlolcat-agent",
   reactStrictMode: true,
   async headers() {
     return [
