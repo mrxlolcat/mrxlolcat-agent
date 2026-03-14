@@ -9,19 +9,29 @@ const config: Config = {
       colors: {
         warden: {
           bg: "#000000",
-          surface: "#0A0A0A",
-          border: "#1A1A1A",
+          surface: "#050505",
+          border: "#111111",
           accent: "#00F0FF",
-          muted: "#888888",
+          gold: "#D4AF37",
+          silver: "#C0C0C0",
+          muted: "#444444",
         },
         cat: {
           purple: "#8B5CF6",
           pink: "#EC4899",
           cyan: "#06B6D4",
-          dark: "#1E1B2E",
-          darker: "#13111C",
-          surface: "#252238",
+          dark: "#0A0A0A",
+          darker: "#000000",
+          surface: "#0F0F0F",
         },
+      },
+      boxShadow: {
+        'premium': '0 0 50px -12px rgba(0, 240, 255, 0.25)',
+        'gold-glow': '0 0 30px -5px rgba(212, 175, 55, 0.3)',
+      },
+      backgroundImage: {
+        'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%)',
+        'gold-gradient': 'linear-gradient(135deg, #D4AF37 0%, #F9D71C 50%, #D4AF37 100%)',
       },
       animation: {
         "gradient": "gradient 3s ease infinite",
