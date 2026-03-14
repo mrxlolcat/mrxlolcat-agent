@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("[mrxlolcat-agent] chat error:", error);
     return Response.json(
-      { role: "assistant", content: `protocol error: ${error.message || "cat brain crashed"} 😿` },
+      { role: "assistant", content: `Error: ${error.message || error.toString() || "cat brain crashed"} 😿` },
       { status: 500 }
     );
   }
