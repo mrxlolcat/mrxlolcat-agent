@@ -58,7 +58,7 @@ class MrxLolcatAgent {
       model,
       system: systemInstruction,
       messages: context,
-      maxTokens: 1000,
+      maxTokens: 500,
       temperature: 0.85,
       onFinish: async ({ text }) => {
         if (fid) {
