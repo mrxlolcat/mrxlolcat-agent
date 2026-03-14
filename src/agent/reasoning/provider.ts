@@ -1,10 +1,18 @@
 import { createOpenAI } from "@ai-sdk/openai";
 
 export async function getModel(requestedModelId?: string) {
+  // Debug logging
+  console.log("[provider] requestedModelId:", requestedModelId);
+  console.log("[provider] AI_MODEL env:", process.env.AI_MODEL);
+  console.log("[provider] OPENROUTER_API_KEY exists:", !!process.env.OPENROUTER_API_KEY);
+  console.log("[provider] OPENAI_API_KEY exists:", !!process.env.OPENAI_API_KEY);
+  
   // Default to OpenRouter Claude with correct model ID format
   const modelId = requestedModelId || process.env.AI_MODEL || "openrouter/anthropic/claude-3.5-sonnet";
+  console.log("[provider] final modelId:", modelId);
 
   if (modelId.startsWith("openrouter/") && process.env.OPENROUTER_API_KEY) {
+    console.log("[provider] Using OpenRouter");
     const openrouter = createOpenAI({
       baseURL: "https://openrouter.ai/api/v1",
       apiKey: process.env.OPENROUTER_API_KEY,
@@ -19,8 +27,8 @@ export async function getModel(requestedModelId?: string) {
   }
 
   if (process.env.OPENAI_API_KEY) {
+    console.log("[provider] Using OpenAI direct");
     const { openai } = await import("@ai-sdk/openai");
-    // Map model aliases to actual model names
     const actualModel = modelId.startsWith("gpt") ? modelId : 
                         modelId === "claude-3.5-sonnet" ? "gpt-4o-mini" : 
                         modelId === "gpt-4o-mini" ? "gpt-4o-mini" : "gpt-4o-mini";
@@ -29,6 +37,7 @@ export async function getModel(requestedModelId?: string) {
 
   // Last resort fallback - use OpenRouter if key exists even without prefix
   if (process.env.OPENROUTER_API_KEY) {
+    console.log("[provider] Using OpenRouter fallback");
     const openrouter = createOpenAI({
       baseURL: "https://openrouter.ai/api/v1",
       apiKey: process.env.OPENROUTER_API_KEY,
@@ -36,6 +45,7 @@ export async function getModel(requestedModelId?: string) {
     return openrouter("anthropic/claude-3.5-sonnet");
   }
 
+  console.log("[provider] No model available, returning null");
   return null;
 }
 
