@@ -38,7 +38,7 @@ export default function Chat({ context }: { context: any }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [streaming, setStreaming] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("gpt-4o-mini");
+  const [selectedModel, setSelectedModel] = useState("openrouter/anthropic/claude-3.5-sonnet");
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
