@@ -102,9 +102,16 @@ export default function Chat({ context }: { context: any }) {
         setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: data.content }]);
         setLoading(false);
       }
-    } catch {
+    } catch (error) {
+      console.error("Chat error:", error);
       setLoading(false);
       setStreaming(false);
+      // Add error message to chat
+      setMessages((prev) => [...prev, { 
+        id: (Date.now() + 2).toString(), 
+        role: "assistant", 
+        content: "Network error. Please try again. 😿" 
+      }]);
     }
   }, [input, loading, messages, address, selectedModel, context]);
 
@@ -118,8 +125,9 @@ export default function Chat({ context }: { context: any }) {
         </div>
         <div className="flex items-center gap-3">
           <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} className="bg-black border border-warden-border text-zinc-500 text-[9px] font-bold uppercase rounded px-2 py-1 outline-none hover:border-warden-accent/50 transition-colors">
-            <option value="gpt-4o-mini">GPT-4o</option>
-            <option value="openrouter/anthropic/claude-3.5-sonnet">Claude 3.5</option>
+            <option value="openrouter/anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+            <option value="gpt-4o-mini">GPT-4o Mini</option>
+            <option value="openrouter/google/gemini-2.0-flash">Gemini 2.0 Flash</option>
           </select>
           <button onClick={() => { clearHistory(); setMessages([{ id: "w", role: "assistant", content: "memory cleared." }]); }} className="bg-zinc-900/50 p-1.5 rounded border border-warden-border hover:border-red-500/50 text-zinc-600 hover:text-red-500 transition-all">
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>

@@ -1,7 +1,8 @@
 import { createOpenAI } from "@ai-sdk/openai";
 
 export async function getModel(requestedModelId?: string) {
-  const modelId = requestedModelId || process.env.AI_MODEL || "openrouter/anthropic/claude-3-5-sonnet";
+  // Default to OpenRouter Claude with correct model ID format
+  const modelId = requestedModelId || process.env.AI_MODEL || "openrouter/anthropic/claude-3.5-sonnet";
 
   if (modelId.startsWith("openrouter/") && process.env.OPENROUTER_API_KEY) {
     const openrouter = createOpenAI({
@@ -19,7 +20,20 @@ export async function getModel(requestedModelId?: string) {
 
   if (process.env.OPENAI_API_KEY) {
     const { openai } = await import("@ai-sdk/openai");
-    return openai(modelId.startsWith("gpt") ? modelId : "gpt-4o-mini");
+    // Map model aliases to actual model names
+    const actualModel = modelId.startsWith("gpt") ? modelId : 
+                        modelId === "claude-3.5-sonnet" ? "gpt-4o-mini" : 
+                        modelId === "gpt-4o-mini" ? "gpt-4o-mini" : "gpt-4o-mini";
+    return openai(actualModel);
+  }
+
+  // Last resort fallback - use OpenRouter if key exists even without prefix
+  if (process.env.OPENROUTER_API_KEY) {
+    const openrouter = createOpenAI({
+      baseURL: "https://openrouter.ai/api/v1",
+      apiKey: process.env.OPENROUTER_API_KEY,
+    });
+    return openrouter("anthropic/claude-3.5-sonnet");
   }
 
   return null;
