@@ -3,7 +3,7 @@ name: mrxlolcat-skills
 description: The official skills library for MRX LOLCAT. Contains modular capabilities for Web3 automation, monitoring, and social hub management.
 allowed-tools: Fetch, LI.FI, Neynar, Pinecone
 metadata:
-  version: 3.0.0
+  version: 3.1.0
   author: MRX LOLCAT
 ---
 
@@ -16,3 +16,4 @@ This directory contains the modular skills used by the MRX LOLCAT agent.
 - [monitor-skill](./monitor-skill/SKILL.md): Real-time wallet tracking.
 - [social-skill](./social-skill/SKILL.md): Farcaster interactions.
 - [agentcash-skill](./agentcash-skill/SKILL.md): Micropayments and premium APIs.
+- [farcaster-snap](./farcaster-snap/SKILL.md): Create interactive Farcaster embedded apps (snaps).
