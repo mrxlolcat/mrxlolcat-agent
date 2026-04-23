@@ -1,5 +1,27 @@
 import { createOpenAI } from "@ai-sdk/openai";
 
+// Available DashScope Models (Singapore Endpoint)
+const DASHSCOPE_MODELS = {
+  // Text Models
+  "qwen-plus": "qwen-plus",           // Balanced (default)
+  "qwen-turbo": "qwen-turbo",         // Fast
+  "qwen-max": "qwen-max",             // Advanced
+  "qwen2.5-72b-instruct": "qwen2.5-72b-instruct",   // Large
+  "qwen2.5-32b-instruct": "qwen2.5-32b-instruct",   // Medium
+  "qwen2.5-14b-instruct": "qwen2.5-14b-instruct",   // Small
+  "qwen2.5-7b-instruct": "qwen2.5-7b-instruct",     // Tiny
+  
+  // Vision Models
+  "qwen-vl-plus": "qwen-vl-plus",     // Vision
+  "qwen-vl-max": "qwen-vl-max",       // Vision Advanced
+  
+  // Legacy mappings
+  "gpt-4o-mini": "qwen-plus",
+  "gpt-4o": "qwen-max",
+  "claude-3.5-sonnet": "qwen2.5-72b-instruct",
+  "gemini-1.5-flash": "qwen-turbo",
+} as const;
+
 export async function getModel(requestedModelId?: string) {
   // 0. DashScope (Alibaba Cloud Qwen) - Singapore International Endpoint
   if (process.env.DASHSCOPE_API_KEY) {
@@ -8,12 +30,10 @@ export async function getModel(requestedModelId?: string) {
       apiKey: process.env.DASHSCOPE_API_KEY,
     });
 
-    // Strategy: Map requested model or use qwen-plus as default
-    const model = requestedModelId === "gpt-4o-mini" ? "qwen-turbo" :
-                  requestedModelId === "gpt-4o" ? "qwen-plus" :
-                  requestedModelId === "claude-3.5-sonnet" ? "qwen-max" :
-                  requestedModelId?.includes("qwen") ? requestedModelId :
-                  "qwen-plus";
+    // Map requested model or use default
+    const model = DASHSCOPE_MODELS[requestedModelId as keyof typeof DASHSCOPE_MODELS] 
+      || process.env.AI_MODEL 
+      || "qwen-plus";
 
     return dashscope(model);
   }
