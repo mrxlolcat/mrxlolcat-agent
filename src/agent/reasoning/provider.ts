@@ -1,6 +1,23 @@
 import { createOpenAI } from "@ai-sdk/openai";
 
 export async function getModel(requestedModelId?: string) {
+  // 0. DashScope (Alibaba Cloud Qwen) - Singapore International Endpoint
+  if (process.env.DASHSCOPE_API_KEY) {
+    const dashscope = createOpenAI({
+      baseURL: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      apiKey: process.env.DASHSCOPE_API_KEY,
+    });
+
+    // Strategy: Map requested model or use qwen-plus as default
+    const model = requestedModelId === "gpt-4o-mini" ? "qwen-turbo" :
+                  requestedModelId === "gpt-4o" ? "qwen-plus" :
+                  requestedModelId === "claude-3.5-sonnet" ? "qwen-max" :
+                  requestedModelId?.includes("qwen") ? requestedModelId :
+                  "qwen-plus";
+
+    return dashscope(model);
+  }
+
   // 1. AgentRouter.org (Primary Provider via NewAPI)
   if (process.env.AGENTROUTER_API_KEY) {
     const agentRouter = createOpenAI({
