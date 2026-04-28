@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import "./globals.css";
-import AppKitProvider from "@/context";
 import { Analytics } from "@vercel/analytics/react";
 import MiniApp from "../base/MiniApp";
 
@@ -54,26 +52,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const headersObj = await headers();
-  const cookies = headersObj.get("cookie");
-
   return (
-    <html lang="en" dir="ltr">
-      <body dir="ltr" className="antialiased">
-        <AppKitProvider cookies={cookies}>
-          <MiniApp>
-            {children}
-            <Analytics />
-          </MiniApp>
-        </AppKitProvider>
+    <html lang="en" dir="ltr" data-theme="dark">
+      <body dir="ltr" className="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">
+        <MiniApp>
+          {children}
+          <Analytics />
+        </MiniApp>
         <script dangerouslySetInnerHTML={{ __html: `
           document.documentElement.setAttribute('dir', 'ltr');
           document.body.setAttribute('dir', 'ltr');
+          document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') || 'dark');
         `}} />
       </body>
     </html>

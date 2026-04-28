@@ -1,8 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: "/Users/rhmnhsim/mrxlolcat-agent",
+  outputFileTracingRoot: process.cwd(),
   reactStrictMode: true,
+  webpack: (config) => {
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      "@wagmi/core/tempo": "./src/shims/wagmiTempo.ts",
+    };
+    return config;
+  },
   async headers() {
     return [
       {
