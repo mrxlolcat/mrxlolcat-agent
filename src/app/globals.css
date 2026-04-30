@@ -151,6 +151,44 @@ body {
     border-color: var(--border-strong);
   }
 
+  .sidebar-nav-item {
+    @apply flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition;
+    color: var(--text-muted);
+  }
+
+  .sidebar-nav-item:hover {
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg-card) 80%, transparent);
+  }
+
+  .sidebar-nav-item[data-active="true"] {
+    color: var(--text);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+
+  .sidebar-history-item {
+    @apply block w-full truncate rounded-lg px-2 py-1.5 text-left text-[13px] transition;
+    color: var(--text-muted);
+  }
+
+  .sidebar-history-item:hover {
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg-card) 80%, transparent);
+  }
+
+  .chat-message-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .chat-message-content p {
+    margin-bottom: 0.75rem;
+  }
+
+  .chat-message-content p:last-child {
+    margin-bottom: 0;
+  }
+
   .input-field {
     @apply w-full rounded-2xl border px-4 py-3 outline-none transition;
     border-color: var(--border);
