@@ -164,7 +164,7 @@ export default function ChatPanel() {
               value={input}
               onChange={handleInputChange}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
+              if (e.key === "Enter" && !e.shiftKey && !isLoading) {
                   e.preventDefault();
                   handleSubmit(e as unknown as React.FormEvent);
                 }
