@@ -1,210 +1,270 @@
 "use client";
 
 import { useChat } from "ai/react";
-import { useRef, useEffect, useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
 
 const modelOptions = [
-  { id: "qwen-plus", label: "Qwen Plus" },
-  { id: "qwen-turbo", label: "Qwen Turbo" },
-  { id: "qwen-max", label: "Qwen Max" },
-  { id: "qwen2.5-72b-instruct", label: "Qwen 2.5 72B" },
+  { id: "qwen-plus", label: "Qwen Plus", desc: "Balanced" },
+  { id: "qwen-turbo", label: "Qwen Turbo", desc: "Fast" },
+  { id: "qwen-max", label: "Qwen Max", desc: "Advanced" },
+  { id: "qwen2.5-72b-instruct", label: "Qwen 2.5 72B", desc: "Large" },
 ];
+
+const suggestions = [
+  "Swap 1 ETH to USDC on Base",
+  "Check ETH price now",
+  "Deploy a meme token on Base",
+  "Bridge USDC from Ethereum to Base",
+];
+
+function TypewriterText({ content, speed = 18 }: { content: string; speed?: number }) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+  const indexRef = useRef(0);
+
+  useEffect(() => {
+    indexRef.current = 0;
+    setDisplayed("");
+    setDone(false);
+  }, [content]);
+
+  useEffect(() => {
+    if (done) return;
+    const timer = setInterval(() => {
+      indexRef.current += 1;
+      if (indexRef.current >= content.length) {
+        setDisplayed(content);
+        setDone(true);
+        clearInterval(timer);
+      } else {
+        setDisplayed(content.slice(0, indexRef.current));
+      }
+    }, speed);
+    return () => clearInterval(timer);
+  }, [content, speed, done]);
+
+  return (
+    <span>
+      {displayed}
+      {!done && <span className="inline-block h-4 w-0.5 bg-[var(--accent)] animate-pulse ml-0.5" />}
+    </span>
+  );
+}
 
 export default function ChatPanel() {
   const [model, setModel] = useState(modelOptions[0].id);
-  const [showModelSelect, setShowModelSelect] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
+  const [showModelMenu, setShowModelMenu] = useState(false);
+  const { messages, input, handleInputChange, handleSubmit, isLoading, stop, setInput } = useChat({
     api: "/api/chat",
     body: { modelId: model },
   });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [completedMsgIds, setCompletedMsgIds] = useState<Set<string>>(new Set());
+
+  const currentModel = modelOptions.find((m) => m.id === model) || modelOptions[0];
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const selectedModel = modelOptions.find((m) => m.id === model);
+  useEffect(() => {
+    if (!isLoading && messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.role === "assistant") {
+        setCompletedMsgIds((prev) => new Set(prev).add(lastMsg.id));
+      }
+    }
+  }, [isLoading, messages]);
+
+  const handleSuggestion = useCallback((text: string) => {
+    setInput(text);
+    textareaRef.current?.focus();
+  }, [setInput]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey && !isLoading) {
+      e.preventDefault();
+      if (input.trim()) {
+        handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+      }
+    }
+  }, [isLoading, input, handleSubmit]);
 
   return (
-    <div className="chat-container flex h-full flex-col">
-      {/* Chat header */}
-      <div className="chat-header flex items-center justify-between border-b border-[var(--border)] px-4 py-3 lg:px-6">
+    <section className="panel-card flex min-h-[680px] flex-col gap-4">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-sm font-semibold text-[var(--text)]">mrxlolcat agent</h1>
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowModelSelect(!showModelSelect)}
-              className="flex items-center gap-1.5 rounded-lg border border-[var(--border)] px-2.5 py-1.5 text-xs text-[var(--text-muted)] transition hover:border-[var(--border-strong)] hover:text-[var(--text)]"
-            >
-              {selectedModel?.label || "Select model"}
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </button>
-            {showModelSelect && (
-              <div className="absolute left-0 top-full z-10 mt-1 w-48 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1 shadow-lg">
+          <div className="relative h-9 w-9 overflow-hidden rounded-xl shadow-md">
+            <Image src="/logo.jpeg" alt="mrxlolcat" fill className="object-cover" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold">mrxlolcat Agent</h2>
+            <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+              <span className={`status-dot ${isLoading ? "bg-[var(--orange)] animate-pulse" : "bg-[var(--teal)]"}`} />
+              {isLoading ? "writing..." : "online"}
+            </div>
+          </div>
+        </div>
+
+        {/* Model selector */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowModelMenu(!showModelMenu)}
+            className="flex items-center gap-2 rounded-xl border border-[var(--border)] px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] transition-all duration-200 hover:border-[var(--border-strong)] hover:text-[var(--text)]"
+          >
+            <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
+            {currentModel.label}
+            <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform duration-200 ${showModelMenu ? "rotate-180" : ""}`}>
+              <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            </svg>
+          </button>
+          {showModelMenu && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setShowModelMenu(false)} />
+              <div className="dropdown-menu absolute right-0 top-full z-20 mt-1 w-52">
                 {modelOptions.map((option) => (
                   <button
                     key={option.id}
                     type="button"
-                    onClick={() => {
-                      setModel(option.id);
-                      setShowModelSelect(false);
-                    }}
-                    className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-xs transition ${
-                      model === option.id
-                        ? "bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] text-[var(--text)]"
-                        : "text-[var(--text-muted)] hover:bg-[var(--bg-card)] hover:text-[var(--text)]"
-                    }`}
+                    onClick={() => { setModel(option.id); setShowModelMenu(false); }}
+                    className={`dropdown-item ${model === option.id ? "text-[var(--accent)]" : ""}`}
                   >
-                    {option.label}
-                    {model === option.id && (
-                      <svg className="ml-auto" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 6L9 17l-5-5" />
-                      </svg>
-                    )}
+                    <span className={`h-2 w-2 rounded-full ${model === option.id ? "bg-[var(--accent)]" : "bg-[var(--text-hint)]"}`} />
+                    <div>
+                      <div className="font-medium">{option.label}</div>
+                      <div className="text-[10px] text-[var(--text-hint)]">{option.desc}</div>
+                    </div>
                   </button>
                 ))}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
 
-      {/* Messages area */}
-      <div ref={scrollRef} className="chat-messages flex-1 overflow-y-auto px-4 py-6 lg:px-6">
+      {/* Messages */}
+      <div className="flex-1 space-y-4 overflow-y-auto pr-1">
         {messages.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
-            <div className="max-w-md text-center">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)] text-lg font-black text-white">
-                M
-              </div>
-              <h2 className="text-lg font-semibold text-[var(--text)]">How can I help you today?</h2>
-              <p className="mt-2 text-sm text-[var(--text-muted)]">
-                Ask me about cross-chain bridging, token swaps, wallet monitoring, or anything on-chain.
-              </p>
-              <div className="mt-6 grid gap-2 sm:grid-cols-2">
-                {[
-                  "Bridge ETH from Ethereum to Base",
-                  "Check my wallet balance",
-                  "Swap USDC to ETH",
-                  "Explain LI.FI routing",
-                ].map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    type="button"
-                    onClick={() => {
-                      const fakeEvent = {
-                        target: { value: suggestion },
-                      } as React.ChangeEvent<HTMLTextAreaElement>;
-                      handleInputChange(fakeEvent);
-                    }}
-                    className="rounded-xl border border-[var(--border)] px-3 py-2.5 text-left text-xs text-[var(--text-muted)] transition hover:border-[var(--border-strong)] hover:bg-[var(--bg-card)] hover:text-[var(--text)]"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
+          <div className="flex h-full flex-col items-center justify-center gap-6 py-12 animate-fade-in">
+            <div className="relative h-20 w-20 overflow-hidden rounded-2xl shadow-lg animate-float">
+              <Image src="/logo.jpeg" alt="mrxlolcat" fill className="object-cover" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-[var(--text)]">How can I help you today?</h3>
+              <p className="mt-1 text-sm text-[var(--text-muted)]">Ask me about swaps, prices, deploying tokens, or anything on-chain.</p>
+            </div>
+            <div className="grid w-full max-w-lg gap-2 sm:grid-cols-2">
+              {suggestions.map((s, i) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => handleSuggestion(s)}
+                  className="rounded-2xl border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] px-4 py-3 text-left text-sm text-[var(--text-muted)] transition-all duration-200 hover:border-[var(--border-strong)] hover:text-[var(--text)] hover:shadow-md hover:-translate-y-0.5"
+                  style={{ animationDelay: `${i * 100}ms` }}
+                >
+                  {s}
+                </button>
+              ))}
             </div>
           </div>
-        ) : (
-          <div className="mx-auto max-w-3xl space-y-6">
-            {messages.map((message) => (
-              <div key={message.id} className="chat-message-row flex gap-3">
-                {/* Avatar */}
-                <div className="flex-shrink-0">
-                  {message.role === "user" ? (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--bg-card)] text-xs font-semibold text-[var(--text-muted)]">
-                      H
-                    </div>
+        ) : null}
+
+        {messages.map((message, i) => {
+          const isLastAssistant = message.role === "assistant" && i === messages.length - 1 && !completedMsgIds.has(message.id);
+          return (
+            <div
+              key={message.id}
+              className={`flex gap-3 animate-fade-in ${message.role === "user" ? "flex-row-reverse" : ""}`}
+              style={{ animationDelay: `${Math.min(i * 50, 300)}ms` }}
+            >
+              {message.role === "user" ? (
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--bg-card)] text-xs font-bold text-[var(--text-muted)]">
+                  H
+                </div>
+              ) : (
+                <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-lg shadow-sm">
+                  <Image src="/logo.jpeg" alt="mrxlolcat" fill className="object-cover" />
+                </div>
+              )}
+              <div
+                className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                  message.role === "user"
+                    ? "rounded-tr-md border border-[var(--border-strong)] bg-[color-mix(in_srgb,var(--accent)_14%,var(--bg-card))]"
+                    : "rounded-tl-md border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-surface)_88%,transparent)]"
+                }`}
+              >
+                <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-hint)]">
+                  {message.role === "user" ? "You" : "mrxlolcat"}
+                </div>
+                <div className="chat-message-content whitespace-pre-wrap">
+                  {message.role === "assistant" && isLastAssistant && !isLoading ? (
+                    <TypewriterText content={message.content} speed={16} />
                   ) : (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-white">
-                      M
-                    </div>
+                    message.content
                   )}
                 </div>
-
-                {/* Content */}
-                <div className="min-w-0 flex-1">
-                  <div className="mb-1 text-xs font-medium text-[var(--text-muted)]">
-                    {message.role === "user" ? "You" : "mrxlolcat"}
-                  </div>
-                  <div className="chat-message-content text-sm leading-relaxed text-[var(--text)]">
-                    {message.content}
-                  </div>
-                </div>
               </div>
-            ))}
+            </div>
+          );
+        })}
 
-            {isLoading && (
-              <div className="chat-message-row flex gap-3">
-                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-xs font-bold text-white">
-                  M
-                </div>
-                <div className="flex items-center gap-1.5 pt-2">
-                  <span className="typing-dot h-2 w-2 rounded-full bg-[var(--text-hint)]" />
-                  <span className="typing-dot h-2 w-2 rounded-full bg-[var(--text-hint)] [animation-delay:0.12s]" />
-                  <span className="typing-dot h-2 w-2 rounded-full bg-[var(--text-hint)] [animation-delay:0.24s]" />
-                </div>
+        {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+          <div className="flex gap-3 animate-fade-in">
+            <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-lg shadow-sm">
+              <Image src="/logo.jpeg" alt="mrxlolcat" fill className="object-cover" />
+            </div>
+            <div className="rounded-2xl rounded-tl-md border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-surface)_88%,transparent)] px-4 py-4">
+              <div className="flex items-center gap-2">
+                <span className="typing-dot h-2 w-2 rounded-full bg-[var(--accent)]" />
+                <span className="typing-dot h-2 w-2 rounded-full bg-[var(--accent)] [animation-delay:0.12s]" />
+                <span className="typing-dot h-2 w-2 rounded-full bg-[var(--accent)] [animation-delay:0.24s]" />
               </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Input area */}
-      <div className="chat-input-area border-t border-[var(--border)] px-4 py-3 lg:px-6">
-        <form onSubmit={handleSubmit} className="mx-auto max-w-3xl">
-          <div className="chat-input-box flex items-end gap-2 rounded-2xl border border-[var(--border)] bg-[var(--bg-surface)] px-4 py-3 transition-colors focus-within:border-[var(--border-strong)]">
-            <textarea
-              value={input}
-              onChange={handleInputChange}
-              onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey && !isLoading) {
-                  e.preventDefault();
-                  handleSubmit(e as unknown as React.FormEvent);
-                }
-              }}
-              rows={1}
-              className="max-h-32 flex-1 resize-none bg-transparent text-sm text-[var(--text)] placeholder-[var(--text-hint)] outline-none"
-              placeholder="Message mrxlolcat..."
-              style={{ minHeight: "24px" }}
-            />
-            <div className="flex items-center gap-1.5">
-              {isLoading ? (
-                <button
-                  type="button"
-                  onClick={stop}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--text-muted)] transition hover:bg-[var(--bg-card)] hover:text-[var(--text)]"
-                  title="Stop generating"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="6" y="6" width="12" height="12" rx="2" />
-                  </svg>
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={!input.trim()}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--accent)] text-white transition hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
-                  title="Send message"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                  </svg>
-                </button>
-              )}
             </div>
           </div>
-          <p className="mt-2 text-center text-[11px] text-[var(--text-hint)]">
-            mrxlolcat agent powered by DashScope. May produce inaccurate information.
-          </p>
-        </form>
+        )}
+
+        <div ref={messagesEndRef} />
       </div>
-    </div>
+
+      {/* Input */}
+      <form onSubmit={handleSubmit} className="swap-card !p-3">
+        <div className="flex items-end gap-2">
+          <textarea
+            ref={textareaRef}
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            rows={1}
+            className="input-field !rounded-xl !py-2.5 resize-none text-sm"
+            placeholder="Ask mrxlolcat anything..."
+            style={{ minHeight: "42px", maxHeight: "120px" }}
+          />
+          <div className="flex gap-1.5">
+            {isLoading ? (
+              <button type="button" onClick={stop} className="btn-secondary !rounded-xl h-[42px] w-[42px] !p-0">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                  <rect x="3" y="3" width="8" height="8" rx="1" />
+                </svg>
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={!input.trim()}
+                className="btn-primary !rounded-xl h-[42px] w-[42px] !p-0"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+      </form>
+    </section>
   );
 }
