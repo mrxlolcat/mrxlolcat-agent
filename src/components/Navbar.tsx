@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useAccount, useDisconnect } from "wagmi";
+import { useDisconnect } from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
+import { useWalletData } from "@/hooks/useWalletData";
 import type { Panel } from "./Sidebar";
 
 export default function Navbar({
@@ -16,7 +17,7 @@ export default function Navbar({
   onToggleSidebar: () => void;
 }) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const { address, isConnected, chain } = useAccount();
+  const { address, isConnected, chain, nativeBalance, totalUSD, formatPrice } = useWalletData();
   const { disconnect } = useDisconnect();
   const { open } = useAppKit();
   const [showWalletMenu, setShowWalletMenu] = useState(false);
@@ -104,7 +105,12 @@ export default function Navbar({
                 className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] px-3 py-1.5 text-xs font-medium text-[var(--text)] transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-md"
               >
                 <span className="h-5 w-5 rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--teal)] animate-pulse-glow" />
-                <span className="mono">{shortAddress}</span>
+                <div className="flex flex-col items-start">
+                  <span className="mono">{shortAddress}</span>
+                  {totalUSD > 0 && (
+                    <span className="text-[10px] text-[var(--text-muted)]">{formatPrice(totalUSD)}</span>
+                  )}
+                </div>
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" className={`transition-transform duration-200 ${showWalletMenu ? "rotate-180" : ""}`}>
                   <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" />
                 </svg>
@@ -113,7 +119,17 @@ export default function Navbar({
               {showWalletMenu && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowWalletMenu(false)} />
-                  <div className="dropdown-menu absolute right-0 top-full z-50 mt-2 w-48">
+                  <div className="dropdown-menu absolute right-0 top-full z-50 mt-2 w-64">
+                    {/* Balance overview */}
+                    <div className="px-4 py-3 border-b border-[var(--border)]">
+                      <div className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-hint)]">Portfolio Value</div>
+                      <div className="mt-1 text-lg font-bold mono">{formatPrice(totalUSD)}</div>
+                      {nativeBalance && (
+                        <div className="mt-1 text-xs text-[var(--text-muted)]">
+                          {Number(nativeBalance.formatted).toFixed(4)} {nativeBalance.symbol}
+                        </div>
+                      )}
+                    </div>
                     <button
                       type="button"
                       onClick={() => { open(); setShowWalletMenu(false); }}

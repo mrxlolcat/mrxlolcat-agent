@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { CHAIN_META, CHAINS } from "@/configs/constants";
+import { useWalletData } from "@/hooks/useWalletData";
 
 export type Panel = "chat" | "swap" | "lending" | "deploy" | "prices";
 
@@ -26,6 +27,8 @@ export default function Sidebar({
   isOpen?: boolean;
   onClose?: () => void;
 }) {
+  const { isConnected, address, tokenBalances, totalUSD, formatPrice, loading } = useWalletData();
+
   return (
     <>
       {isOpen && (
@@ -72,6 +75,47 @@ export default function Sidebar({
               </button>
             ))}
           </div>
+
+          {/* Wallet Balances */}
+          {isConnected && (
+            <div className="mt-6 animate-fade-in">
+              <div className="mb-3 px-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-hint)]">
+                Wallet
+              </div>
+              <div className="mx-2 rounded-2xl border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-card)_60%,transparent)] p-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-hint)]">Total Value</span>
+                  {loading && <span className="h-3 w-3 animate-spin rounded-full border border-[var(--accent)] border-t-transparent" />}
+                </div>
+                <div className="mt-1 text-lg font-bold mono text-[var(--text)]">
+                  {totalUSD > 0 ? formatPrice(totalUSD) : "$0.00"}
+                </div>
+                {address && (
+                  <div className="mt-1 mono text-[10px] text-[var(--text-hint)]">
+                    {address.slice(0, 6)}...{address.slice(-4)}
+                  </div>
+                )}
+                {tokenBalances.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {tokenBalances.slice(0, 5).map((tb) => (
+                      <div key={tb.symbol} className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-2">
+                          <Image src={tb.logoUrl} alt={tb.symbol} width={16} height={16} className="rounded-full" unoptimized />
+                          <span className="font-medium text-[var(--text)]">{tb.symbol}</span>
+                        </div>
+                        <div className="text-right">
+                          <div className="mono text-[var(--text)]">{tb.balance}</div>
+                          {tb.usdValue > 0 && (
+                            <div className="mono text-[10px] text-[var(--text-hint)]">{formatPrice(tb.usdValue)}</div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Networks */}
           <div className="mt-6 mb-3 px-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-hint)]">
