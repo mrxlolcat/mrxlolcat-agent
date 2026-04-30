@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DEFAULT_FEE_WALLET } from "../../configs/constants";
 
 export default function RevenueDashboard() {
   const [revenue, setRevenue] = useState<string>("0.00");
-  const feeWallet = "0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5";
+  const feeWallet = DEFAULT_FEE_WALLET;
 
   // Dummy effect to simulate fetching total accumulated fees
   useEffect(() => {

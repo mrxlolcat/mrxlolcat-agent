@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     `;
 
     return new Response(html, { headers: { 'Content-Type': 'text/html' } });
-  } catch (error) {
+  } catch (_error) {
     return new Response("Error", { status: 500 });
   }
 }

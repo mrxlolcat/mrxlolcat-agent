@@ -14,12 +14,13 @@ export async function publishCast(text: string, embeds?: { url: string }[]) {
   }
 
   try {
-    const result: any = await neynar.publishCast({
+    const result = await neynar.publishCast({
       signerUuid: process.env.FARCASTER_SIGNER_UUID,
       text: text,
       embeds: embeds,
     });
-    return { success: true, hash: result.hash || result.cast?.hash };
+    const castResult = result as { hash?: string; cast?: { hash?: string } };
+    return { success: true, hash: castResult.hash || castResult.cast?.hash };
   } catch (error) {
     console.error("[Neynar Cast Error]:", error);
     return { success: false, error };

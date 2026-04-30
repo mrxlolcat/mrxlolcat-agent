@@ -1,6 +1,6 @@
 "use client";
 
-import { wagmiAdapter, projectId, networks } from "@/configs/wagmi";
+import { wagmiAdapter, projectId } from "@/configs/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createAppKit } from "@reown/appkit/react";
 import {
@@ -20,6 +20,7 @@ const metadata = {
 };
 
 createAppKit({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   adapters: [wagmiAdapter as any],
   projectId,
   networks: [base, mainnet, arbitrum, polygon, optimism, bsc, avalanche, zkSync, linea, scroll],

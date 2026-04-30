@@ -1,69 +1,89 @@
-# MRX LOLCAT Agent 🤠✨
+# MRX LOLCAT Agent
 
-The high-tech AI automation terminal for the Farcaster Agentic Economy.
+AI automation agent for the Farcaster ecosystem, powered by Alibaba Cloud DashScope.
 
-[![CI](https://github.com/mrxlolcat/mrxlolcat-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/mrxlolcat/mrxlolcat-agent/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-teal.svg)](https://opensource.org/licenses/MIT)
 
-## 🚀 Features
-- **AI-Powered by Qwen**: Alibaba Cloud DashScope integration (Singapore region)
-- **Automation Engine**: AI-driven on-chain task execution.
-- **Omnichain Bridge**: Powered by LI.FI (60+ chains).
-- **Long-Term Memory**: FID-based vector storage via Pinecone.
-- **Multi-LLM Reasoning**: Qwen-plus, Qwen-turbo, Qwen-max, Qwen2.5-72b via DashScope.
-- **Agent Skills**: Built with [Agent Skills Specification](https://agentskills.io/specification).
-- **Interactive Frames**: Native Farcaster Mini App experience.
+## Features
 
-## 🤖 AI Configuration
-- **Provider**: Alibaba Cloud DashScope (Singapore)
-- **Endpoint**: `https://dashscope-intl.aliyuncs.com/compatible-mode/v1`
-- **Models**: 
-  - `qwen-plus` (default) - Balanced performance
-  - `qwen-turbo` - Fast responses
-  - `qwen-max` - Advanced reasoning
-  - `qwen2.5-72b-instruct` - Large model capability
+- **DashScope AI** - Alibaba Cloud Qwen models (qwen-plus, qwen-turbo, qwen-max, qwen2.5-72b)
+- **Farcaster Mini App** - Native mini app with SDK integration
+- **Cross-Chain Bridge** - LI.FI Smart Routing (60+ chains)
+- **Vector Memory** - FID-based long-term memory via Pinecone + DashScope embeddings
+- **MCP Server** - Model Context Protocol for tool interoperability
 
-## 🧠 Agent Skills
-This agent supports modular skills located in `src/agent/skills/`.
-- `bridge-skill`: Cross-chain transfers.
-- `monitor-skill`: Real-time monitoring.
-- `social-skill`: Farcaster interactions.
+## AI Configuration
 
-## ⚠️ Security Warning
-**NEVER share or store your private keys in plain text.** 
-MRX LOLCAT is designed to be non-custodial. All on-chain actions requiring signatures are handled via industry-standard providers (Wagmi/Reown). Always verify transaction details in your wallet before signing.
+| Setting | Value |
+|---------|-------|
+| Provider | Alibaba Cloud DashScope (Singapore) |
+| Endpoint | `https://dashscope-intl.aliyuncs.com/compatible-mode/v1` |
+| Default Model | `qwen-plus` |
+| Available Models | qwen-plus, qwen-turbo, qwen-max, qwen2.5-72b-instruct |
+| Embeddings | `text-embedding-v3` (1024 dim) |
 
-## 🛠️ Architecture
-Detailed documentation can be found in [ARCHITECTURE.md](./src/docs/ARCHITECTURE.md).
+## Architecture
 
-## 🗺️ Roadmap
-- [x] v3.0: Modular Agent Core & LI.FI Integration
-- [x] v3.1: DashScope AI Integration (Singapore)
-- [ ] v3.2: Portfolio Monitoring Alerts
-- [ ] v3.3: Multi-Agent Collaboration (Swarm Mode)
-- [ ] v4.0: Intent-based Direct Transaction Execution (AA)
+```
+src/
+  agent/
+    core/         # brain.ts, orchestrator.ts, mcp.ts, logger.ts
+    reasoning/    # provider.ts (DashScope only)
+    memory/       # manager.ts (Pinecone + DashScope embeddings)
+    tools/        # lifi.ts, farcaster.ts, frames.ts
+    skills/       # SKILL.md
+  app/            # Next.js App Router (pages + API routes)
+  components/     # React UI components
+  configs/        # constants.ts, lifi.ts, wagmi.ts
+  providers/      # MiniApp.tsx, WalletProvider.tsx, wallet.ts
+  types/          # Shared TypeScript interfaces
+  lib/            # Client-side utilities
+  docs/           # ARCHITECTURE.md
+```
 
-## 📦 Getting Started
+See [ARCHITECTURE.md](./src/docs/ARCHITECTURE.md) for detailed system flow.
+
+## Getting Started
+
+### Prerequisites
+- Node.js >= 20.0.0
+- DashScope API key ([Get from Alibaba Cloud Console](https://modelstudio.console.alibabacloud.com/))
 
 ### Local Development
-1. Clone the repo.
-2. `npm install`
-3. Copy `.env.example` to `.env.local` and fill in the keys.
-   - **Required**: `DASHSCOPE_API_KEY` (get from [Alibaba Cloud Console](https://modelstudio.console.alibabacloud.com/))
-4. `npm run dev`
+```bash
+git clone https://github.com/mrxlolcat/mrxlolcat-agent.git
+cd mrxlolcat-agent
+npm install
+cp .env.example .env.local
+# Edit .env.local - set DASHSCOPE_API_KEY
+npm run dev
+```
 
 ### Vercel Deployment
 1. Fork this repository
 2. Import to Vercel
-3. Set environment variables:
-   - `DASHSCOPE_API_KEY` - Your Alibaba Cloud DashScope API key
-   - Other keys as needed (Pinecone, Neynar, etc.)
-4. Deploy!
+3. Set environment variables (`DASHSCOPE_API_KEY` required)
+4. Deploy
 
 ### Docker
 ```bash
 docker compose up
 ```
 
-## 📄 License
-This project is licensed under the [MIT License](./LICENSE).
+## Farcaster Mini App
+
+This app runs as a Farcaster Mini App. Configuration is in `public/.well-known/farcaster.json`.
+
+To generate `accountAssociation`, visit: https://farcaster.xyz/~/developers/mini-apps/manifest
+
+## Roadmap
+
+- [x] v3.0: Modular Agent Core & LI.FI Integration
+- [x] v3.1: DashScope AI Integration
+- [x] v3.2: Repository cleanup & DashScope-first architecture
+- [ ] v3.3: Portfolio Monitoring Alerts
+- [ ] v4.0: Multi-Agent Collaboration
+
+## License
+
+[MIT](./LICENSE)

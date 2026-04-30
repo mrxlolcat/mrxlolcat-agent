@@ -7,5 +7,5 @@ export const lifiConfig = createConfig({
   routeOptions: {
     fee: FEE_BPS / 10000, // 10 BPS -> 0.001 (0.1%)
     feeRecipient: process.env.PARTNER_WALLET_BASE || DEFAULT_FEE_WALLET,
-  } as any
+  } as Parameters<typeof createConfig>[0]["routeOptions"]
 });

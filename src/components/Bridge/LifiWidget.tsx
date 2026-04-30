@@ -35,7 +35,7 @@ export function LifiWidgetEmbed() {
 
   return (
     <div className="flex justify-center w-full mt-4">
-      <LiFiWidget config={widgetConfig as any} integrator="mrxlolcat-agent" />
+      <LiFiWidget config={widgetConfig as Parameters<typeof LiFiWidget>[0]["config"]} integrator="mrxlolcat-agent" />
     </div>
   );
 }

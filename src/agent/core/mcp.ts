@@ -10,7 +10,7 @@ import { publishCast } from "../tools/farcaster";
 export const mcpServer = new Server(
   {
     name: "mrxlolcat-agent",
-    version: "3.0.0",
+    version: "3.2.0",
   },
   {
     capabilities: {
@@ -80,9 +80,10 @@ mcpServer.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     throw new Error(`Tool not found: ${name}`);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
     return {
-      content: [{ type: "text", text: `Error: ${error.message}` }],
+      content: [{ type: "text", text: `Error: ${message}` }],
       isError: true,
     };
   }

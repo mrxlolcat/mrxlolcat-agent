@@ -13,13 +13,14 @@ export async function POST(req: NextRequest) {
     // Directly handle the JSON-RPC request using the MCP Server instance
     // Note: In a full implementation, we might need to manage session/transport state
     // but for stateless tool calls, this direct mapping works.
-    const response = await (mcpServer as any).handleRequest(request);
+    const response = await (mcpServer as unknown as { handleRequest: (req: unknown) => Promise<unknown> }).handleRequest(request);
 
     return NextResponse.json(response);
-  } catch (error: any) {
-    console.error("[MCP API Error]:", error);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("[MCP API Error]:", message);
     return NextResponse.json(
-      { jsonrpc: "2.0", error: { code: -32603, message: error.message }, id: null },
+      { jsonrpc: "2.0", error: { code: -32603, message }, id: null },
       { status: 500 }
     );
   }

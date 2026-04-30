@@ -71,7 +71,7 @@ export default function Sidebar({
             <span className="h-2.5 w-2.5 rounded-full bg-[var(--teal)]" />
             online
           </div>
-          <span className="mono text-xs text-[var(--text-hint)]">v2.1.1</span>
+          <span className="mono text-xs text-[var(--text-hint)]">v3.2.0</span>
         </div>
       </footer>
     </aside>
