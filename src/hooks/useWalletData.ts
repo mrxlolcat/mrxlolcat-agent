@@ -1,9 +1,32 @@
 "use client";
 
 import { useAccount, useBalance } from "wagmi";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { POPULAR_TOKENS, CHAINS, CHAIN_META } from "@/configs/constants";
 import { usePrices } from "./usePrices";
+
+const NATIVE_TOKEN_MAP: Record<number, { coingeckoId: string; logoUrl: string }> = {
+  [CHAINS.BASE]: { coingeckoId: "ethereum", logoUrl: POPULAR_TOKENS[0].logoUrl },
+  [CHAINS.ETHEREUM]: { coingeckoId: "ethereum", logoUrl: POPULAR_TOKENS[0].logoUrl },
+  [CHAINS.OPTIMISM]: { coingeckoId: "ethereum", logoUrl: POPULAR_TOKENS[0].logoUrl },
+  [CHAINS.ARBITRUM]: { coingeckoId: "ethereum", logoUrl: POPULAR_TOKENS[0].logoUrl },
+  [CHAINS.ZKSYNC]: { coingeckoId: "ethereum", logoUrl: POPULAR_TOKENS[0].logoUrl },
+  [CHAINS.LINEA]: { coingeckoId: "ethereum", logoUrl: POPULAR_TOKENS[0].logoUrl },
+  [CHAINS.SCROLL]: { coingeckoId: "ethereum", logoUrl: POPULAR_TOKENS[0].logoUrl },
+  [CHAINS.BSC]: { coingeckoId: "binancecoin", logoUrl: "https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png" },
+  [CHAINS.POLYGON]: { coingeckoId: "matic-network", logoUrl: "https://assets.coingecko.com/coins/images/4713/small/polygon.png" },
+  [CHAINS.AVALANCHE]: { coingeckoId: "avalanche-2", logoUrl: "https://assets.coingecko.com/coins/images/12559/small/Avalanche_Circle_RedWhite_Trans.png" },
+};
+
+interface RawBalance {
+  symbol: string;
+  name: string;
+  balanceRaw: bigint;
+  decimals: number;
+  logoUrl: string;
+  coingeckoId: string;
+  chainId: number;
+}
 
 export interface TokenBalance {
   symbol: string;
@@ -22,32 +45,33 @@ export function useWalletData() {
     address,
   });
   const { getPrice, formatPrice } = usePrices(15000);
-  const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
+  const getPriceRef = useRef(getPrice);
+  getPriceRef.current = getPrice;
+
+  const [rawBalances, setRawBalances] = useState<RawBalance[]>([]);
   const [loading, setLoading] = useState(false);
 
   const chainId = chain?.id || CHAINS.BASE;
 
-  const fetchERC20Balances = useCallback(async () => {
+  const fetchBalances = useCallback(async () => {
     if (!address || !isConnected) {
-      setTokenBalances([]);
+      setRawBalances([]);
       return;
     }
 
     setLoading(true);
-    const results: TokenBalance[] = [];
+    const results: RawBalance[] = [];
 
     // Native balance
     if (nativeBalance) {
-      const ethPrice = getPrice("ethereum");
-      const nativeFormatted = Number(nativeBalance.formatted);
+      const nativeInfo = NATIVE_TOKEN_MAP[chainId] || NATIVE_TOKEN_MAP[CHAINS.ETHEREUM];
       results.push({
         symbol: nativeBalance.symbol,
         name: CHAIN_META[chainId]?.nativeCurrency || "ETH",
-        balance: nativeFormatted.toFixed(6),
         balanceRaw: nativeBalance.value,
         decimals: nativeBalance.decimals,
-        logoUrl: POPULAR_TOKENS[0].logoUrl,
-        usdValue: nativeFormatted * ethPrice.price,
+        logoUrl: nativeInfo.logoUrl,
+        coingeckoId: nativeInfo.coingeckoId,
         chainId,
       });
     }
@@ -78,18 +102,15 @@ export function useWalletData() {
           if (json.result && json.result !== "0x" && json.result !== "0x0") {
             const rawBalance = BigInt(json.result);
             if (rawBalance > BigInt(0)) {
-              const formatted = Number(rawBalance) / 10 ** token.decimals;
-              const price = getPrice(token.coingeckoId);
               return {
                 symbol: token.symbol,
                 name: token.name,
-                balance: formatted.toFixed(token.decimals === 18 ? 6 : 2),
                 balanceRaw: rawBalance,
                 decimals: token.decimals,
                 logoUrl: token.logoUrl,
-                usdValue: formatted * price.price,
+                coingeckoId: token.coingeckoId,
                 chainId,
-              } as TokenBalance;
+              } as RawBalance;
             }
           }
           return null;
@@ -99,17 +120,35 @@ export function useWalletData() {
       });
 
       const settled = await Promise.all(calls);
-      const validBalances = settled.filter((b): b is TokenBalance => b !== null);
+      const validBalances = settled.filter((b): b is RawBalance => b !== null);
       results.push(...validBalances);
     }
 
-    setTokenBalances(results);
+    setRawBalances(results);
     setLoading(false);
-  }, [address, isConnected, chainId, nativeBalance, getPrice]);
+  }, [address, isConnected, chainId, nativeBalance]);
 
   useEffect(() => {
-    fetchERC20Balances();
-  }, [fetchERC20Balances]);
+    fetchBalances();
+  }, [fetchBalances]);
+
+  // Compute USD values separately so price updates don't re-fetch balances
+  const tokenBalances = useMemo<TokenBalance[]>(() => {
+    return rawBalances.map((rb) => {
+      const formatted = Number(rb.balanceRaw) / 10 ** rb.decimals;
+      const price = getPriceRef.current(rb.coingeckoId);
+      return {
+        symbol: rb.symbol,
+        name: rb.name,
+        balance: formatted.toFixed(rb.decimals === 18 ? 6 : 2),
+        balanceRaw: rb.balanceRaw,
+        decimals: rb.decimals,
+        logoUrl: rb.logoUrl,
+        usdValue: formatted * price.price,
+        chainId: rb.chainId,
+      };
+    });
+  }, [rawBalances, getPrice]);
 
   const totalUSD = tokenBalances.reduce((sum, t) => sum + t.usdValue, 0);
 
@@ -125,9 +164,7 @@ export function useWalletData() {
     formatPrice,
     refetch: () => {
       refetchNative();
-      fetchERC20Balances();
+      fetchBalances();
     },
   };
 }
-
-

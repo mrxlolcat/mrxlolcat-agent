@@ -73,9 +73,7 @@ export default function ChatPanel() {
     if (!isLoading && messages.length > 0) {
       const lastMsg = messages[messages.length - 1];
       if (lastMsg.role === "assistant") {
-        setTimeout(() => {
-          setCompletedMsgIds((prev) => new Set(prev).add(lastMsg.id));
-        }, lastMsg.content.length * 18 + 200);
+        setCompletedMsgIds((prev) => new Set(prev).add(lastMsg.id));
       }
     }
   }, [isLoading, messages]);
