@@ -1,13 +1,10 @@
 import { Pinecone, RecordMetadata } from "@pinecone-database/pinecone";
+import { createOpenAI } from "@ai-sdk/openai";
 import { embed } from "ai";
-import { openai } from "@ai-sdk/openai";
 
 const pc = process.env.PINECONE_API_KEY ? new Pinecone({ apiKey: process.env.PINECONE_API_KEY }) : null;
 
-// Menggunakan index default atau spesifik
-const indexName = "cat-agent-memory"; 
-
-export const redis = null; // Removed upstash redis to prevent reference errors
+const indexName = "cat-agent-memory";
 
 interface AgentMemoryMetadata extends RecordMetadata {
   fid: string;
@@ -17,33 +14,39 @@ interface AgentMemoryMetadata extends RecordMetadata {
   timestamp: number;
 }
 
-// Fungsi pembantu untuk membuat vektor embedding nyata dari teks
+const EMBEDDING_DIMENSION = 1024;
+
 async function getEmbedding(text: string): Promise<number[]> {
-  if (!process.env.OPENAI_API_KEY) {
-    return Array(1536).fill(0);
+  if (!process.env.DASHSCOPE_API_KEY) {
+    return Array(EMBEDDING_DIMENSION).fill(0);
   }
-  
+
   try {
+    const dashscope = createOpenAI({
+      baseURL: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      apiKey: process.env.DASHSCOPE_API_KEY,
+    });
+
     const { embedding } = await embed({
-      model: openai.embedding("text-embedding-3-small"),
+      model: dashscope.embedding("text-embedding-v3", { dimensions: EMBEDDING_DIMENSION }),
       value: text,
     });
     return embedding;
   } catch (error) {
-    console.error("Embedding generation failed:", error);
-    return Array(1536).fill(0);
+    console.error("DashScope embedding generation failed:", error);
+    return Array(EMBEDDING_DIMENSION).fill(0);
   }
 }
 
 export async function getHistory(fid: string, limit: number = 10) {
   if (!pc || !fid) return [];
-  
+
   try {
     const index = pc.Index<AgentMemoryMetadata>(indexName);
-    
+
     const queryResponse = await index.query({
       topK: limit,
-      vector: Array(1536).fill(0),
+      vector: Array(EMBEDDING_DIMENSION).fill(0),
       filter: { fid: { "$eq": fid } },
       includeMetadata: true,
     });
@@ -68,7 +71,7 @@ export async function getHistory(fid: string, limit: number = 10) {
 
 export async function saveMessage(fid: string, role: "user" | "assistant", content: string, walletAddress?: string) {
   if (!pc || !fid) return;
-  
+
   try {
     const index = pc.Index<AgentMemoryMetadata>(indexName);
     const timestamp = Date.now();
@@ -76,17 +79,19 @@ export async function saveMessage(fid: string, role: "user" | "assistant", conte
 
     const vectorData = await getEmbedding(content);
 
-    await index.upsert([{
-      id,
-      values: vectorData,
-      metadata: {
-        fid,
-        walletAddress: walletAddress || "",
-        role,
-        content,
-        timestamp,
-      }
-    }] as any);
+    await index.upsert({
+      records: [{
+        id,
+        values: vectorData,
+        metadata: {
+          fid,
+          walletAddress: walletAddress || "",
+          role,
+          content,
+          timestamp,
+        }
+      }]
+    });
 
   } catch (error) {
     console.error("Pinecone Upsert Error:", error);

@@ -3,10 +3,15 @@
 import { useChat } from "ai/react";
 import { useMemo, useState } from "react";
 
-const modelOptions = ["gpt-4o", "gpt-4o-mini", "qwen-plus"];
+const modelOptions = [
+  { id: "qwen-plus", label: "Qwen Plus" },
+  { id: "qwen-turbo", label: "Qwen Turbo" },
+  { id: "qwen-max", label: "Qwen Max" },
+  { id: "qwen2.5-72b-instruct", label: "Qwen 2.5 72B" },
+];
 
 export default function ChatPanel() {
-  const [model, setModel] = useState(modelOptions[0]);
+  const [model, setModel] = useState(modelOptions[0].id);
   const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
     api: "/api/chat",
     body: { modelId: model },
@@ -83,7 +88,7 @@ export default function ChatPanel() {
             <label className="mb-2 block text-xs uppercase tracking-[0.24em] text-[var(--text-hint)]">Model</label>
             <select value={model} onChange={(e) => setModel(e.target.value)} className="input-field mono">
               {modelOptions.map((option) => (
-                <option key={option} value={option}>{option}</option>
+                <option key={option.id} value={option.id}>{option.label}</option>
               ))}
             </select>
           </div>

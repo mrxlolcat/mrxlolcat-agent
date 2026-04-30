@@ -1,7 +1,21 @@
 {
-  "name": "MRX LOLCAT Agent",
-  "version": "3.0.0",
-  "accountAssociation": "0xbA444Be47ac0Fb4738C6fcb33D19Bc03E854B4B5",
-  "wallets": ["base", "op-mainnet"],
-  "features": ["frames", "miniapps", "tipjar"]
+  "accountAssociation": {},
+  "miniapp": {
+    "version": "1",
+    "name": "MRX LOLCAT Agent",
+    "homeUrl": "https://mrxlolcat-agent.vercel.app",
+    "iconUrl": "https://mrxlolcat-agent.vercel.app/icon.png",
+    "splashImageUrl": "https://mrxlolcat-agent.vercel.app/splash.png",
+    "splashBackgroundColor": "#13111C",
+    "webhookUrl": "https://mrxlolcat-agent.vercel.app/api/webhook/neynar",
+    "subtitle": "AI Agent for Base",
+    "description": "AI-powered on-chain automation agent for cross-chain bridging, wallet monitoring, and Farcaster social management.",
+    "primaryCategory": "finance",
+    "tags": ["ai", "defi", "bridge", "base", "agent"],
+    "requiredChains": ["eip155:8453"],
+    "requiredCapabilities": [
+      "wallet.getEthereumProvider",
+      "actions.signIn"
+    ]
+  }
 }

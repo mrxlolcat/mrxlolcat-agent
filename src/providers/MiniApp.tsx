@@ -9,14 +9,10 @@ interface MiniAppProps {
 
 export default function MiniApp({ children }: MiniAppProps) {
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
-  const [context, setContext] = useState<any>();
-
   useEffect(() => {
     const initSdk = async () => {
       try {
         await sdk.actions.ready();
-        const ctx = await sdk.context;
-        setContext(ctx);
         setIsSdkLoaded(true);
       } catch (err) {
         console.error("Farcaster Mini App SDK initialization failed:", err);

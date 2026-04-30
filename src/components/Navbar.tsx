@@ -65,7 +65,7 @@ export default function Navbar({
             wallet
           </div>
           <div className="hidden rounded-full border border-[var(--border)] px-3 py-2 text-xs font-semibold text-[var(--accent)] sm:block">
-            GPT-4o
+            DashScope
           </div>
           <button type="button" onClick={toggleTheme} className="btn-secondary px-3 py-2 text-xs">
             Theme {theme === "dark" ? "◐" : "◑"}

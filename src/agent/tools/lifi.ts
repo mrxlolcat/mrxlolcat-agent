@@ -1,5 +1,5 @@
-import { getRoutes, executeRoute } from '@lifi/sdk';
-import { lifiConfig } from '../../configs/lifi';
+import { getRoutes } from '@lifi/sdk';
+import '../../configs/lifi';
 import { CHAINS, TOKENS } from '../../configs/constants';
 
 export interface BridgeParams {
@@ -12,7 +12,6 @@ export interface BridgeParams {
 }
 
 export async function catBridge({
-  fid, 
   fromChain = CHAINS.BASE,
   toChain = CHAINS.OPTIMISM,
   fromToken = TOKENS.USDC_BASE,

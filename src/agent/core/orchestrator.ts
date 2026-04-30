@@ -3,14 +3,7 @@ import { getSystemPrompt } from "./brain";
 import { getModel } from "../reasoning/provider";
 import { getHistory, saveMessage } from "../memory/manager";
 import { logger } from "./logger";
-
-export interface ChatRequest {
-  messages: any[];
-  fid?: string;
-  walletAddress?: string;
-  modelId?: string;
-  channel?: string;
-}
+import type { ChatRequest } from "../../types";
 
 /**
  * MRX LOLCAT Orchestrator
@@ -22,14 +15,16 @@ class MrxLolcatAgent {
   async chat({ messages, fid, walletAddress, modelId, channel }: ChatRequest) {
     logger.agent(`System processing for FID: ${fid || "anonymous"}`);
 
-    let chatHistory: any[] = [];
+    let chatHistory: { role: string; content: string }[] = [];
     const lastMessage = messages[messages.length - 1]?.content || "";
 
     // 1. Memory Retrieval
     if (fid) {
       try {
         logger.memory(`Accessing Pinecone node for FID: ${fid}`);
-        chatHistory = await getHistory(fid);
+        const history = await getHistory(fid);
+        chatHistory = history
+          .filter((m): m is { role: string; content: string } => !!m.role && !!m.content);
         
         // 2. Memory Archival (User Message)
         saveMessage(fid, "user", lastMessage, walletAddress)
@@ -42,14 +37,14 @@ class MrxLolcatAgent {
     // 3. Model Selection
     const model = await getModel(modelId);
     if (!model) {
-      throw new Error("Critical: AI Provider unavailable.");
+      throw new Error("DashScope API key not configured. Set DASHSCOPE_API_KEY in environment variables.");
     }
 
     // 4. Prompt Assembly
     const systemInstruction = getSystemPrompt(channel, walletAddress);
     const context = chatHistory.length > 0 
-      ? [...chatHistory, messages[messages.length - 1]] 
-      : messages;
+      ? [...chatHistory.map(m => ({ role: m.role as "user" | "assistant", content: m.content })), { role: "user" as const, content: lastMessage }] 
+      : messages.map(m => ({ role: m.role as "user" | "assistant", content: m.content }));
 
     // 5. Execution & Reasoning Stream
     logger.agent("Launching reasoning stream...");

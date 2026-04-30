@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const html = handleCatGameFrame(buttonIndex);
 
     return new Response(html, { headers: { 'Content-Type': 'text/html' } });
-  } catch (error) {
+  } catch (_error) {
     return new Response("Error processing frame", { status: 500 });
   }
 }

@@ -3,7 +3,7 @@ import { getRoutes } from '@lifi/sdk';
 import '../../../../configs/lifi';
 import { CHAINS, TOKENS } from '../../../../configs/constants';
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const routesResponse = await getRoutes({
       fromChainId: CHAINS.BASE,
@@ -27,7 +27,8 @@ export async function GET(req: NextRequest) {
       bestRoute: receiveAmount,
       message: `Simulated 1 USDC Base -> OP. Found ${routes.length} routes.`,
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

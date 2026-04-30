@@ -5,7 +5,7 @@ import {
 } from "@reown/appkit/networks";
 
 // Get projectId from https://cloud.reown.com
-export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "b5681c42340910519165288653703e26";
+export const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || process.env.NEXT_PUBLIC_PROJECT_ID || "";
 
 if (!projectId) {
   throw new Error("Project ID is not defined");
