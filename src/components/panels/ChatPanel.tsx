@@ -1,7 +1,7 @@
 "use client";
 
 import { useChat } from "ai/react";
-import { useMemo, useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 const modelOptions = [
@@ -18,6 +18,40 @@ const suggestions = [
   "Bridge USDC from Ethereum to Base",
 ];
 
+function TypewriterText({ content, speed = 18 }: { content: string; speed?: number }) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+  const indexRef = useRef(0);
+
+  useEffect(() => {
+    indexRef.current = 0;
+    setDisplayed("");
+    setDone(false);
+  }, [content]);
+
+  useEffect(() => {
+    if (done) return;
+    const timer = setInterval(() => {
+      indexRef.current += 1;
+      if (indexRef.current >= content.length) {
+        setDisplayed(content);
+        setDone(true);
+        clearInterval(timer);
+      } else {
+        setDisplayed(content.slice(0, indexRef.current));
+      }
+    }, speed);
+    return () => clearInterval(timer);
+  }, [content, speed, done]);
+
+  return (
+    <span>
+      {displayed}
+      {!done && <span className="inline-block h-4 w-0.5 bg-[var(--accent)] animate-pulse ml-0.5" />}
+    </span>
+  );
+}
+
 export default function ChatPanel() {
   const [model, setModel] = useState(modelOptions[0].id);
   const [showModelMenu, setShowModelMenu] = useState(false);
@@ -27,27 +61,38 @@ export default function ChatPanel() {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [completedMsgIds, setCompletedMsgIds] = useState<Set<string>>(new Set());
 
-  const status = useMemo(() => (isLoading ? "typing" : "ready"), [isLoading]);
   const currentModel = modelOptions.find((m) => m.id === model) || modelOptions[0];
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSuggestion = (text: string) => {
+  useEffect(() => {
+    if (!isLoading && messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.role === "assistant") {
+        setTimeout(() => {
+          setCompletedMsgIds((prev) => new Set(prev).add(lastMsg.id));
+        }, lastMsg.content.length * 18 + 200);
+      }
+    }
+  }, [isLoading, messages]);
+
+  const handleSuggestion = useCallback((text: string) => {
     setInput(text);
     textareaRef.current?.focus();
-  };
+  }, [setInput]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey && !isLoading) {
       e.preventDefault();
       if (input.trim()) {
         handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
       }
     }
-  };
+  }, [isLoading, input, handleSubmit]);
 
   return (
     <section className="panel-card flex min-h-[680px] flex-col gap-4">
@@ -60,8 +105,8 @@ export default function ChatPanel() {
           <div>
             <h2 className="text-lg font-semibold">mrxlolcat Agent</h2>
             <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
-              <span className="status-dot bg-[var(--teal)]" />
-              {status === "typing" ? "thinking..." : "online"}
+              <span className={`status-dot ${isLoading ? "bg-[var(--orange)] animate-pulse" : "bg-[var(--teal)]"}`} />
+              {isLoading ? "writing..." : "online"}
             </div>
           </div>
         </div>
@@ -120,7 +165,7 @@ export default function ChatPanel() {
                   key={s}
                   type="button"
                   onClick={() => handleSuggestion(s)}
-                  className="rounded-2xl border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] px-4 py-3 text-left text-sm text-[var(--text-muted)] transition-all duration-200 hover:border-[var(--border-strong)] hover:text-[var(--text)] hover:shadow-md"
+                  className="rounded-2xl border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-card)_80%,transparent)] px-4 py-3 text-left text-sm text-[var(--text-muted)] transition-all duration-200 hover:border-[var(--border-strong)] hover:text-[var(--text)] hover:shadow-md hover:-translate-y-0.5"
                   style={{ animationDelay: `${i * 100}ms` }}
                 >
                   {s}
@@ -130,37 +175,46 @@ export default function ChatPanel() {
           </div>
         ) : null}
 
-        {messages.map((message, i) => (
-          <div
-            key={message.id}
-            className={`flex gap-3 animate-fade-in ${message.role === "user" ? "flex-row-reverse" : ""}`}
-            style={{ animationDelay: `${i * 50}ms` }}
-          >
-            {message.role === "user" ? (
-              <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--bg-card)] text-xs font-bold text-[var(--text-muted)]">
-                H
-              </div>
-            ) : (
-              <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-lg shadow-sm">
-                <Image src="/logo.jpeg" alt="mrxlolcat" fill className="object-cover" />
-              </div>
-            )}
+        {messages.map((message, i) => {
+          const isLastAssistant = message.role === "assistant" && i === messages.length - 1 && !completedMsgIds.has(message.id);
+          return (
             <div
-              className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                message.role === "user"
-                  ? "rounded-tr-md border border-[var(--border-strong)] bg-[color-mix(in_srgb,var(--accent)_14%,var(--bg-card))]"
-                  : "rounded-tl-md border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-surface)_88%,transparent)]"
-              }`}
+              key={message.id}
+              className={`flex gap-3 animate-fade-in ${message.role === "user" ? "flex-row-reverse" : ""}`}
+              style={{ animationDelay: `${Math.min(i * 50, 300)}ms` }}
             >
-              <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-hint)]">
-                {message.role === "user" ? "You" : "mrxlolcat"}
+              {message.role === "user" ? (
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--bg-card)] text-xs font-bold text-[var(--text-muted)]">
+                  H
+                </div>
+              ) : (
+                <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-lg shadow-sm">
+                  <Image src="/logo.jpeg" alt="mrxlolcat" fill className="object-cover" />
+                </div>
+              )}
+              <div
+                className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                  message.role === "user"
+                    ? "rounded-tr-md border border-[var(--border-strong)] bg-[color-mix(in_srgb,var(--accent)_14%,var(--bg-card))]"
+                    : "rounded-tl-md border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-surface)_88%,transparent)]"
+                }`}
+              >
+                <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-hint)]">
+                  {message.role === "user" ? "You" : "mrxlolcat"}
+                </div>
+                <div className="chat-message-content whitespace-pre-wrap">
+                  {message.role === "assistant" && isLastAssistant && !isLoading ? (
+                    <TypewriterText content={message.content} speed={16} />
+                  ) : (
+                    message.content
+                  )}
+                </div>
               </div>
-              <div className="chat-message-content">{message.content}</div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
-        {isLoading && (
+        {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
           <div className="flex gap-3 animate-fade-in">
             <div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-lg shadow-sm">
               <Image src="/logo.jpeg" alt="mrxlolcat" fill className="object-cover" />

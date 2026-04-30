@@ -508,3 +508,63 @@ body {
 .price-up { color: var(--teal); }
 .price-down { color: var(--red); }
 .price-neutral { color: var(--text-muted); }
+
+/* ─── Landing Page Animations ─────────────────────────────────────────────── */
+
+@keyframes landing-hero-in {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landing-badge {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes landing-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
+}
+
+@keyframes landing-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(127, 119, 221, 0.2); }
+  50% { box-shadow: 0 0 60px rgba(127, 119, 221, 0.4), 0 0 100px rgba(0, 82, 255, 0.15); }
+}
+
+@keyframes landing-cta-glow {
+  0%, 100% { box-shadow: 0 4px 24px rgba(127, 119, 221, 0.3); }
+  50% { box-shadow: 0 6px 40px rgba(127, 119, 221, 0.5), 0 0 60px rgba(0, 82, 255, 0.2); }
+}
+
+.landing-hero-in {
+  animation: landing-hero-in 1s ease-out both;
+}
+
+.landing-badge-in {
+  animation: landing-badge 0.6s ease-out 0.3s both;
+}
+
+.landing-chains-in {
+  animation: landing-hero-in 0.8s ease-out 0.6s both;
+}
+
+.landing-float {
+  animation: landing-float 20s ease-in-out infinite;
+}
+
+.landing-float-delayed {
+  animation: landing-float 25s ease-in-out 5s infinite;
+}
+
+.landing-logo-glow {
+  animation: landing-glow 3s ease-in-out infinite;
+}
+
+.landing-logo-pulse {
+  animation: landing-glow 4s ease-in-out infinite;
+}
+
+.landing-cta-glow {
+  animation: landing-cta-glow 2s ease-in-out infinite;
+}
