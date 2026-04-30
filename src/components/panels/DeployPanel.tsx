@@ -168,7 +168,7 @@ export default function DeployPanel() {
         {/* Deploy button */}
         <div className="mt-4 flex items-center justify-between">
           <div className="text-xs text-[var(--text-hint)]">
-            Est. gas: ~0.003 ETH on {CHAIN_META[selectedChain]?.name}
+            Est. gas: ~0.003 {CHAIN_META[selectedChain]?.nativeCurrency || "ETH"} on {CHAIN_META[selectedChain]?.name}
           </div>
           <button
             type="button"
